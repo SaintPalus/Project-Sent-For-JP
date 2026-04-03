@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -lh \"c:\\\\Users\\\\Administrator\\\\Desktop\\\\66070131_SeniorP1/Backup Model/\"*)",
+      "Bash(ls -lh \"c:\\\\Users\\\\Administrator\\\\Desktop\\\\66070131_SeniorP1/SeniorP1/รวมภาษา Ai/\"*.keras \"c:\\\\Users\\\\Administrator\\\\Desktop\\\\66070131_SeniorP1/SeniorP1/รวมภาษา Ai/\"*.rar \"c:\\\\Users\\\\Administrator\\\\Desktop\\\\66070131_SeniorP1/SeniorP1/รวมภาษา Ai/\"*.exe)",
+      "Bash(cmd /c \"dir /b \"\"C:\\\\Users\\\\Administrator\\\\Desktop\\\\66070131_SeniorP1\\\\SeniorP1\\\\รวมภาษา Ai\"\"\")"
+    ]
+  }
+}
