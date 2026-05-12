@@ -7,9 +7,9 @@
 | รายการ | รายละเอียด |
 |---|---|
 | ชื่อโครงงาน | ระบบรู้จำอารมณ์จากเสียงพูดแบบรวมหลายภาษา |
-| นักศึกษา | รหัส 66070131/66070062|
+| นักศึกษา | รหัส 66070131 |
 | สาขาวิชา | วิทยาการคอมพิวเตอร์ |
-| ภาคการศึกษา | 2 / 2568 |
+| ภาคการศึกษา | 2 / 2567 |
 
 ---
 
@@ -90,25 +90,29 @@
 
 # บทคัดย่อ
 
-&emsp;โครงงานนี้นำเสนอการพัฒนา **ระบบรู้จำอารมณ์จากเสียงพูดแบบรวมหลายภาษา** (Multilingual Speech Emotion Recognition: Multilingual SER) ซึ่งเป็นหัวข้อที่มีความสำคัญในงานด้านปฏิสัมพันธ์ระหว่างมนุษย์กับคอมพิวเตอร์ (Human-Computer Interaction: HCI) แนวคิดหลักของโครงงานคือการนำข้อมูลเสียงพูดจากหลายภาษา ได้แก่ ภาษาอังกฤษ (RAVDESS Dataset) และภาษาเกาหลี (Korean Voice Emotion Dataset) มารวมกันในชุดข้อมูลเดียว แล้วฝึกสอนโมเดล Deep Learning สถาปัตยกรรม **CNN + Bidirectional LSTM** เพื่อให้ระบบสามารถจำแนกอารมณ์ 5 ประเภทคือ โกรธ (Angry) มีความสุข (Happy) เศร้า (Sad) เป็นกลาง (Neutral) และประหลาดใจ (Surprise) ได้โดยไม่ขึ้นกับภาษา
+&emsp;โครงงานนี้นำเสนอการพัฒนา **ระบบรู้จำอารมณ์จากเสียงพูดแบบรองรับหลายภาษา** (Multilingual Speech Emotion Recognition: Multilingual SER) โดยใช้สถาปัตยกรรม **Per-Language ResNet** ซึ่งฝึกสอนโมเดล Convolutional Neural Network แบบ Residual Network แยกสำหรับแต่ละภาษา ระบบรองรับ **5 ภาษา** ได้แก่ ภาษาไทย ภาษาจีน ภาษาญี่ปุ่น ภาษาเกาหลี และภาษาอังกฤษ โดยใช้คุณลักษณะ **Mel Spectrogram** ขนาด 128×130 แทน MFCC เดิม เพื่อจับรูปแบบพลังงานเสียงในมิติเวลาและความถี่พร้อมกัน
 
-&emsp;ในระหว่างการพัฒนา ได้ค้นพบปัญหาสำคัญที่เป็นอุปสรรคหลักของโครงงานคือ **เสียงพูดของแต่ละภาษามีลักษณะทาง Prosody ที่แตกต่างกันอย่างมีนัยสำคัญ** ไม่ว่าจะเป็นรูปแบบ Pitch (F0) ความเร็วในการพูด (Speech Rate) ระดับพลังงาน (Energy Pattern) และจังหวะการพูด (Rhythm) แม้จะเป็นการแสดงออกถึงอารมณ์เดียวกัน ความแตกต่างเหล่านี้ทำให้คุณลักษณะ MFCC ที่สกัดออกมามีการผสมผสานระหว่าง "ลักษณะของอารมณ์" กับ "ลักษณะของภาษา" อย่างแยกไม่ออก ส่งผลให้โมเดลที่ฝึกสอนด้วยข้อมูลหลายภาษาพร้อมกันไม่สามารถเรียนรู้รูปแบบอารมณ์ที่เป็นสากลได้อย่างมีประสิทธิภาพ โดยให้ค่า Test Accuracy อยู่ที่เพียง **~68%** ซึ่งต่ำกว่าเป้าหมายที่ตั้งไว้ที่ 75%
+&emsp;ระบบเริ่มต้นด้วย **Language Detector** แบบ SVM Pipeline (StandardScaler → PCA(80) → SVM kernel RBF) ที่วิเคราะห์จาก Mel Spectrogram เพื่อระบุภาษาของผู้พูดอัตโนมัติ ก่อนส่งต่อไปยังโมเดล ResNet เฉพาะภาษา การออกแบบนี้แก้ปัญหา **Prosody Mismatch** ที่เป็นอุปสรรคสำคัญของ Unified Multilingual Model โดยให้แต่ละโมเดลเรียนรู้รูปแบบอารมณ์ในบริบทของภาษานั้นๆ โดยตรง ไม่ต้องแข่งขันกับ Pattern ของภาษาอื่น
 
-&emsp;รายงานฉบับนี้นำเสนอแนวทางการดำเนินงานอย่างละเอียด ปัญหาที่ค้นพบ บทวิเคราะห์สาเหตุเชิงลึก และทิศทางการพัฒนาต่อในอนาคต (Future of Work) ซึ่งเสนอแนวทาง **การแยกฝึกสอนโมเดลตามภาษา (Per-Language Model)** ร่วมกับการใช้ Language Identifier อัตโนมัติ เพื่อแก้ไขปัญหา Prosody Mismatch ที่เกิดขึ้น
+&emsp;ผลการทดลองบน Test Set ที่ไม่เคยใช้ฝึกสอน ได้ค่า Accuracy ดังนี้ ภาษาไทย 88.40% ภาษาจีน 86.62% ภาษาญี่ปุ่น 84.36% ภาษาอังกฤษ 82.84% และภาษาเกาหลี 53.57% (SVM ให้ผลดีกว่าที่ 72.62% เนื่องจากข้อมูลมีน้อย) **ค่าเฉลี่ยรวม 79.16%** สูงกว่าเป้าหมาย 75% ที่ตั้งไว้ Language Detector ทำงานได้อย่างแม่นยำ **98.54%** ทำให้ระบบโดยรวมทำงานได้อย่างมีประสิทธิภาพในการใช้งานจริง
 
-**คำสำคัญ:** การรู้จำอารมณ์จากเสียง, หลายภาษา, Prosody Mismatch, CNN, Bidirectional LSTM, MFCC, Per-Language Model
+&emsp;นอกจากนี้ยังพัฒนา **Web Demo** ด้วย Gradio และ **Cross-lingual Analysis** เพื่อศึกษาความคล้ายคลึงและความแตกต่างของรูปแบบอารมณ์ระหว่างภาษาต่างๆ ซึ่งเป็นองค์ความรู้สำหรับการพัฒนาต่อยอดในอนาคต
+
+**คำสำคัญ:** การรู้จำอารมณ์จากเสียง, หลายภาษา, Per-Language Model, ResNet, Mel Spectrogram, Language Detector, SVM, Cross-lingual Analysis
 
 ---
 
 # ABSTRACT
 
-&emsp;This project presents the development of a **Multilingual Speech Emotion Recognition (Multilingual SER)** system, a significant area in Human-Computer Interaction research. The core concept was to combine speech audio data from multiple languages — English (RAVDESS Dataset) and Korean (Korean Voice Emotion Dataset) — into a unified dataset, then train a **CNN + Bidirectional LSTM** Deep Learning model capable of classifying 5 emotion categories: Angry, Happy, Sad, Neutral, and Surprise, independent of the spoken language.
+&emsp;This project presents a **Multilingual Speech Emotion Recognition (Multilingual SER)** system using a **Per-Language ResNet** architecture — a Residual Convolutional Neural Network trained separately for each language. The system supports **5 languages**: Thai, Chinese, Japanese, Korean, and English, using **Mel Spectrogram** features (128 mel bands × 130 time frames) extracted at 16,000 Hz sample rate, replacing the MFCC approach used in earlier work to better capture spatial energy distribution patterns.
 
-&emsp;During development, a critical challenge was identified as the primary obstacle: **each language possesses significantly different prosodic characteristics**, including Pitch contour (F0), Speech Rate, Energy Pattern, and Rhythm, even when expressing the same emotion. These differences cause the MFCC features extracted from the audio to be an inseparable mixture of "emotion characteristics" and "language characteristics." As a result, a model trained on mixed multilingual data cannot effectively learn universal emotion patterns. The achieved Test Accuracy was only **~68%**, falling below the target threshold of 75%.
+&emsp;A key insight from prior research was that a single Unified Multilingual Model suffers from **Prosody Mismatch** — each language has distinctly different pitch contours, speech rates, and energy patterns for the same emotion, causing the model to confuse language characteristics with emotion characteristics. The Per-Language approach resolves this by allowing each model to learn emotion patterns within the prosodic context of its own language.
 
-&emsp;This report presents the detailed methodology, discovered problems, in-depth root cause analysis, and proposed Future of Work — specifically, a **Per-Language Model** approach combined with an automatic Language Identifier to resolve the Prosody Mismatch problem.
+&emsp;The system employs an automatic **Language Detector** (SVM pipeline: StandardScaler → PCA(80) → SVM RBF) that identifies the spoken language from audio features before routing to the appropriate emotion model. This detector achieves **98.54% accuracy** on a 5-class language classification task.
 
-**Keywords:** Speech Emotion Recognition, Multilingual, Prosody Mismatch, CNN, Bidirectional LSTM, MFCC, Per-Language Model
+&emsp;Experimental results on held-out test sets demonstrate: Thai 88.40%, Chinese 86.62%, Japanese 84.36%, English 82.84%, and Korean 53.57% (SVM outperforms ResNet at 72.62% due to limited data). The **overall average accuracy is 79.16%**, surpassing the 75% target. The project also includes a Gradio-based Web Demo and a cross-lingual feature analysis module for studying emotion pattern similarities across languages.
+
+**Keywords:** Speech Emotion Recognition, Multilingual, Per-Language Model, ResNet, Mel Spectrogram, Language Detector, SVM, Cross-lingual Analysis
 
 ---
 
@@ -116,9 +120,9 @@
 
 &emsp;โครงงานนี้สำเร็จลุล่วงได้ด้วยความวิริยะอุตสาหะของผู้จัดทำในการศึกษาค้นคว้าองค์ความรู้ด้านการประมวลผลเสียง (Speech Processing) การเรียนรู้เชิงลึก (Deep Learning) และการวิเคราะห์ข้อมูลหลายภาษา
 
-&emsp;ขอขอบคุณ Dataset ที่เปิดให้ใช้งานโดยไม่มีค่าใช้จ่าย ได้แก่ RAVDESS Dataset โดย Livingstone & Russo (2018) และ Korean Voice Emotion Dataset ที่เผยแพร่ผ่าน Hugging Face Datasets รวมถึงชุมชน Open Source ที่พัฒนา Library ต่างๆ ที่ใช้ในโครงงานนี้ ได้แก่ TensorFlow, Keras, Librosa, scikit-learn, NumPy, Matplotlib และ Seaborn
+&emsp;ขอขอบคุณ Dataset ที่เปิดให้ใช้งานโดยไม่มีค่าใช้จ่าย ได้แก่ RAVDESS Dataset โดย Livingstone & Russo (2018), CREMA-D Dataset โดย Cao et al. (2014), Korean Voice Emotion Dataset (hi_kia), JANON Japanese Emotion Dataset, Thai Speech Emotion Dataset (TDED) รวมถึงชุมชน Open Source ที่พัฒนา Library ต่างๆ ที่ใช้ในโครงงานนี้ ได้แก่ PyTorch, torchaudio, Librosa, scikit-learn, Transformers (Hugging Face), Gradio, NumPy, Matplotlib และ Seaborn
 
-&emsp;แม้โครงงานนี้จะไม่สามารถบรรลุเป้าหมายด้านความแม่นยำในระดับที่ตั้งไว้ได้ แต่กระบวนการวิจัยได้ให้ความเข้าใจอย่างลึกซึ้งเกี่ยวกับปัญหา Prosody Mismatch ซึ่งเป็นองค์ความรู้ที่มีคุณค่าสำหรับการพัฒนาต่อยอดในอนาคต
+&emsp;โครงงานนี้บรรลุเป้าหมาย Accuracy ที่ตั้งไว้ที่ 75% ด้วยค่าเฉลี่ยรวม 79.16% และ Language Detector 98.54% ซึ่งเป็นผลจากการประยุกต์ใช้สถาปัตยกรรม Per-Language ResNet ที่แก้ปัญหา Prosody Mismatch ได้อย่างมีประสิทธิภาพ
 
 ---
 
@@ -136,74 +140,88 @@
 
 ## 1.2 วัตถุประสงค์
 
-1. พัฒนาระบบ SER แบบ Multilingual ด้วยสถาปัตยกรรม CNN + Bidirectional LSTM
-2. ศึกษาและวิเคราะห์ปัญหา Prosody Mismatch ที่เกิดขึ้นจากการรวมข้อมูลหลายภาษา
-3. ประเมินประสิทธิภาพของโมเดลด้วยตัวชี้วัด Accuracy, Confusion Matrix และ Classification Report
-4. เสนอแนวทาง Future of Work สำหรับการพัฒนาต่อยอดในอนาคตโดยใช้แนวทาง Per-Language Model
+1. พัฒนาระบบ SER แบบ Multilingual ด้วยสถาปัตยกรรม **Per-Language ResNet** โดยฝึกสอนโมเดลแยกสำหรับแต่ละภาษา
+2. สร้าง **Language Detector** อัตโนมัติที่สามารถระบุภาษาจากเสียงพูดได้อย่างแม่นยำ เพื่อส่งต่อไปยังโมเดลที่เหมาะสม
+3. ศึกษาและวิเคราะห์ปัญหา **Prosody Mismatch** ระหว่างภาษาต่างๆ ผ่าน Cross-lingual Feature Analysis
+4. ประเมินประสิทธิภาพของโมเดลด้วยตัวชี้วัด Accuracy, F1-Score, Confusion Matrix และ Classification Report
+5. พัฒนา **Web Demo** ด้วย Gradio สำหรับทดสอบระบบแบบ Real-time
 
 ## 1.3 ขอบเขตของโครงงาน
 
-**ภาษาที่ใช้ทดสอบ:**
-- ภาษาอังกฤษ — RAVDESS Dataset (Ryerson Audio-Visual Database of Emotional Speech and Song)
-- ภาษาเกาหลี — Korean Voice Emotion Dataset (โหลดผ่าน Hugging Face Datasets)
+**ภาษาที่รองรับ (5 ภาษา):**
 
-**ประเภทอารมณ์ที่จำแนก:** 5 ประเภท
-| ลำดับ | อารมณ์ภาษาอังกฤษ | อารมณ์ภาษาไทย |
-|---|---|---|
-| 1 | Angry | โกรธ |
-| 2 | Happy | มีความสุข |
-| 3 | Sad | เศร้า |
-| 4 | Neutral | เป็นกลาง |
-| 5 | Surprise | ประหลาดใจ |
+| ภาษา | Dataset | จำนวนตัวอย่างทั้งหมด | จำนวนอารมณ์ |
+|---|---|---|---|
+| ภาษาไทย | Thai Speech Emotion Dataset (TDED) | ~30,210 | 4 |
+| ภาษาจีน | Chinese Emotional Speech Corpus | ~2,690 | 6 |
+| ภาษาญี่ปุ่น | JANON Japanese Emotion Dataset | ~1,215 | 6 |
+| ภาษาเกาหลี | Korean Voice Emotion Dataset (hi_kia) | ~420 | 5 |
+| ภาษาอังกฤษ | RAVDESS + CREMA-D | ~11,425 | 7 |
+
+**ประเภทอารมณ์ที่จำแนก (ต่างกันตามภาษา):**
+
+| อารมณ์ | ภาษาไทย | ภาษาจีน | ภาษาญี่ปุ่น | ภาษาเกาหลี | ภาษาอังกฤษ |
+|---|---|---|---|---|---|
+| Angry (โกรธ) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Happy (มีความสุข) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Sad (เศร้า) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Neutral (เป็นกลาง) | ✅ | ✅ | — | ✅ | ✅ |
+| Surprise (ประหลาดใจ) | — | ✅ | ✅ | ✅ | ✅ |
+| Fear (กลัว) | — | ✅ | ✅ | — | ✅ |
+| Disgust (รังเกียจ) | — | — | ✅ | — | ✅ |
 
 **Features ที่ใช้:**
-- MFCC 40 coefficients (โมเดลทั่วไป — เร็ว ประหยัด VRAM)
-- MFCC 128 + Mel Spectrogram (โมเดล High-Resolution — ความแม่นยำสูงกว่า)
+- **Mel Spectrogram** ขนาด 128 Mel Bands × 130 Time Frames = Tensor (1, 128, 130)
+- สกัดจากสัญญาณเสียงที่ Sample Rate 16,000 Hz ความยาว 3 วินาที
+- ใช้ n_fft=1024, hop_length=512, n_mels=128, fmin=0, fmax=8000
 
 **Hardware & Framework:**
 - GPU: NVIDIA GeForce RTX 3060 (12GB VRAM)
-- Framework: TensorFlow 2.x / Keras
-- Audio Processing: Librosa
-- Sample Rate: 22,050 Hz
+- Framework: **PyTorch** + torchaudio 2.6.0
+- Audio Processing: torchaudio, librosa
+- Sample Rate: **16,000 Hz**
 - Duration: 3 วินาทีต่อไฟล์
 
 **ขอบเขตที่ไม่ครอบคลุม:**
-- ไม่รวมการรู้จำเสียงพูดแบบ Real-time Streaming
-- ไม่รวมการประมวลผลภาษาธรรมชาติ (NLP) เพื่อวิเคราะห์เนื้อหา
-- ไม่รวมภาษาไทย (เนื่องจากขาด Labeled Dataset)
+- ไม่รวมการรู้จำเสียงพูดแบบ Real-time Streaming ต่อเนื่อง
+- ไม่รวมการประมวลผลภาษาธรรมชาติ (NLP) เพื่อวิเคราะห์เนื้อหาของคำพูด
+- ภาษาเกาหลีมีข้อมูลน้อยกว่าภาษาอื่นมาก ผลลัพธ์จึงต่ำกว่า
 
 ## 1.4 ขั้นตอนการดำเนินงานและแผนการดำเนินงาน
 
 ```
-ขั้นตอนที่ 1: ศึกษาทฤษฎี (สัปดาห์ที่ 1-2)
-├── ทฤษฎี MFCC และ Mel Spectrogram
-├── สถาปัตยกรรม CNN + Bidirectional LSTM
-└── งานวิจัยที่เกี่ยวข้องด้าน SER
+ขั้นตอนที่ 1: ศึกษาทฤษฎีและวิเคราะห์ปัญหา (สัปดาห์ที่ 1-2)
+├── ทบทวนปัญหา Prosody Mismatch จากงานวิจัยก่อนหน้า
+├── ทฤษฎี Mel Spectrogram และ ResNet
+└── ศึกษาแนวทาง Per-Language Model
 
-ขั้นตอนที่ 2: เตรียมข้อมูล (สัปดาห์ที่ 3-4)
-├── ดาวน์โหลด RAVDESS Dataset
-├── ดาวน์โหลด Korean Dataset ผ่าน Hugging Face
-└── ตรวจสอบคุณภาพและจัดโครงสร้าง Dataset
+ขั้นตอนที่ 2: รวบรวมและเตรียมข้อมูล (สัปดาห์ที่ 3-5)
+├── ดาวน์โหลด RAVDESS + CREMA-D (English)
+├── รวบรวม Korean, Japanese, Chinese, Thai Datasets
+└── สร้าง Data Pipeline: Mel Spectrogram Extraction + Anti-Leakage Split
 
-ขั้นตอนที่ 3: พัฒนา Pipeline (สัปดาห์ที่ 5-6)
-├── สร้างระบบ Feature Extraction (MFCC)
-├── สร้างระบบ Data Augmentation
-└── สร้างระบบป้องกัน Data Leakage
+ขั้นตอนที่ 3: พัฒนา Language Detector (สัปดาห์ที่ 6)
+├── สกัด Mel Spectrogram สำหรับทุกภาษา
+├── Train SVM Pipeline (StandardScaler → PCA → SVM)
+└── ประเมินผล: 98.54% accuracy
 
-ขั้นตอนที่ 4: Train และทดสอบโมเดล (สัปดาห์ที่ 7-10)
-├── Train_Universal_Super.py (โมเดลหลัก)
-├── Train_Test.py (Anti-Leakage Strict Mode)
-├── Train_Model_RTX3060.py (High-Resolution)
-└── Train_model_res.py (Low VRAM)
+ขั้นตอนที่ 4: Train Per-Language ResNet Models (สัปดาห์ที่ 7-10)
+├── สร้างสถาปัตยกรรม EmotionResNet (stem+layer1-3+pool+classifier)
+├── Train แยกสำหรับแต่ละภาษา พร้อม SpecAugment + Audio Augmentation
+└── บันทึกโมเดลที่ดีที่สุดตาม val_accuracy
 
-ขั้นตอนที่ 5: ประเมินผลและวิเคราะห์ (สัปดาห์ที่ 11-12)
-├── Evaluate_Fix_Final.py (Batch Evaluation)
-├── Test_Final.py (Interactive Testing)
-└── วิเคราะห์ Confusion Matrix และ Prosody Mismatch
+ขั้นตอนที่ 5: Wav2Vec2 Feature Extraction (สัปดาห์ที่ 11)
+├── สกัด facebook/wav2vec2-large-xlsr-53 embeddings
+├── Train MLP Classifier บน Wav2Vec2 Features
+└── เปรียบเทียบ ResNet vs Wav2Vec2 vs SVM Baseline
 
-ขั้นตอนที่ 6: สรุปผลและเขียนรายงาน (สัปดาห์ที่ 13-15)
-├── สรุปข้อจำกัดที่ค้นพบ
-├── เสนอ Future of Work (Per-Language Model)
+ขั้นตอนที่ 6: Cross-lingual Analysis และ Web Demo (สัปดาห์ที่ 12)
+├── วิเคราะห์ความคล้ายคลึงระหว่างภาษา (crosslingual_analysis.py)
+├── พัฒนา Web Demo ด้วย Gradio
+└── ทดสอบระบบ End-to-end
+
+ขั้นตอนที่ 7: สรุปผลและเขียนรายงาน (สัปดาห์ที่ 13-15)
+├── วิเคราะห์ผลที่ได้และสาเหตุที่ Korean ทำได้น้อย
 └── จัดทำรายงานฉบับสมบูรณ์
 ```
 
@@ -219,15 +237,18 @@
 | คำศัพท์ | คำนิยาม |
 |---|---|
 | **SER (Speech Emotion Recognition)** | การรู้จำอารมณ์จากเสียงพูดโดยใช้คอมพิวเตอร์ |
+| **Mel Spectrogram** | การแสดงการกระจายพลังงานเสียงในมิติเวลาและความถี่บน Mel Scale ให้ข้อมูลเชิงพื้นที่ที่ MFCC ไม่มี |
 | **MFCC (Mel-Frequency Cepstral Coefficients)** | คุณลักษณะมาตรฐานสำหรับงาน Speech Processing สกัดจากสเปกตรัมของเสียง |
+| **ResNet (Residual Network)** | สถาปัตยกรรม CNN ที่มี Skip Connection ช่วยให้ฝึก Deep Network ได้ง่ายขึ้น |
+| **Per-Language Model** | แนวทางฝึกสอนโมเดลแยกสำหรับแต่ละภาษา เพื่อหลีกเลี่ยงปัญหา Prosody Mismatch |
+| **Language Detector** | ระบบ SVM ที่ระบุภาษาจากเสียงพูดอัตโนมัติก่อนส่งไปยังโมเดล Emotion ที่เหมาะสม |
 | **Prosody** | คุณสมบัติเหนือระดับเสียง ได้แก่ Pitch, Duration, Energy, Rhythm |
-| **Prosody Mismatch** | ความแตกต่างของรูปแบบ Prosody ระหว่างภาษาที่ทำให้โมเดลสับสน |
-| **CNN (Convolutional Neural Network)** | โครงข่ายประสาทเทียมที่ใช้ Convolution สกัด Local Pattern |
-| **Bidirectional LSTM** | LSTM ที่อ่านลำดับข้อมูลทั้งสองทิศทาง (ซ้าย→ขวา และ ขวา→ซ้าย) |
+| **Prosody Mismatch** | ความแตกต่างของรูปแบบ Prosody ระหว่างภาษาที่ทำให้โมเดล Unified สับสน |
+| **SpecAugment** | เทคนิค Data Augmentation สำหรับ Spectrogram โดยการ Mask แบบสุ่มตามแกนเวลาและความถี่ |
 | **Data Leakage** | การที่ข้อมูล Test ปนเข้าสู่กระบวนการ Train ทำให้ผลประเมินเกินจริง |
 | **Data Augmentation** | การสร้างข้อมูลเพิ่มเทียมจากข้อมูลต้นฉบับเพื่อเพิ่มความหลากหลาย |
-| **Overfitting** | โมเดลจำข้อมูล Train มากเกินไปจนทำงานกับข้อมูลใหม่ได้ไม่ดี |
-| **Per-Language Model** | แนวทางฝึกสอนโมเดลแยกสำหรับแต่ละภาษา |
+| **Wav2Vec2** | โมเดล Pre-trained Self-supervised Learning จาก Facebook AI สำหรับงาน Speech Representation |
+| **Cross-lingual Analysis** | การวิเคราะห์ความคล้ายคลึงและความแตกต่างของ Feature Space ระหว่างภาษาต่างๆ |
 
 ---
 
@@ -451,209 +472,303 @@ dataset/
 
 ## 3.1 ภาพรวมสถาปัตยกรรมระบบ
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MULTILINGUAL SER SYSTEM                       │
-│           (ระบบรู้จำอารมณ์จากเสียงพูดแบบรวมหลายภาษา)             │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-              ┌───────────────┴───────────────┐
-              │                               │
-     [Training Pipeline]            [Inference Pipeline]
-              │                               │
-              ▼                               ▼
-    ┌──────────────────┐           ┌──────────────────┐
-    │  File Discovery  │           │   Audio Input    │
-    │  (os.walk)       │           │  (WAV/MP3/FLAC)  │
-    └────────┬─────────┘           └────────┬─────────┘
-             │                              │
-             ▼                              ▼
-    ┌──────────────────┐           ┌──────────────────┐
-    │  Label Detection │           │   Preprocessing  │
-    │  Path / Filename │           │  Trim → Pad/Cut  │
-    └────────┬─────────┘           └────────┬─────────┘
-             │                              │
-             ▼                              ▼
-    ┌──────────────────┐           ┌──────────────────┐
-    │ Audio Load       │           │Feature Extraction│
-    │ librosa.load()   │           │  MFCC (40 coeff) │
-    └────────┬─────────┘           └────────┬─────────┘
-             │                              │
-             ▼                              ▼
-    ┌──────────────────┐           ┌──────────────────┐
-    │ Silence Removal  │           │  Normalization   │
-    │ trim(top_db=25)  │           │  StandardScaler  │
-    └────────┬─────────┘           └────────┬─────────┘
-             │                              │
-             ▼                              ▼
-    ┌──────────────────┐           ┌──────────────────┐
-    │ Feature Extract  │           │  CNN + Bi-LSTM   │
-    │ MFCC → (T, 40)  │           │    Model         │
-    └────────┬─────────┘           └────────┬─────────┘
-             │                              │
-             ▼                              ▼
-    ┌──────────────────┐           ┌──────────────────┐
-    │ Data Augmentation│           │  Softmax Output  │
-    │ Noise/Pitch/Time │           │  Emotion + Conf% │
-    └────────┬─────────┘           └──────────────────┘
-             │
-             ▼
-    ┌──────────────────┐
-    │  Train/Val/Test  │
-    │  Split + Scaler  │
-    └────────┬─────────┘
-             │
-             ▼
-    ┌──────────────────┐
-    │  CNN + Bi-LSTM   │
-    │  Model Training  │
-    └────────┬─────────┘
-             │
-             ▼
-    ┌──────────────────┐
-    │  Save Best Model │
-    │  (.keras + .pkl) │
-    └──────────────────┘
-```
+ระบบ Multilingual SER แบ่งการทำงานออกเป็น 2 Pipeline หลัก คือ **Training Pipeline** (กระบวนการฝึกสอนโมเดล) และ **Inference Pipeline** (กระบวนการทำนายอารมณ์จากไฟล์เสียงใหม่) ทั้งสอง Pipeline ใช้ขั้นตอน Preprocessing และ Feature Extraction ที่เหมือนกันทุกประการเพื่อให้ผลลัพธ์สอดคล้องกัน
+
+### Training Pipeline
+
+| ลำดับ | ขั้นตอน | รายละเอียด | เครื่องมือที่ใช้ |
+|---|---|---|---|
+| 1 | **File Discovery** | สแกนโฟลเดอร์ Dataset แบบ Recursive เพื่อรวบรวมไฟล์เสียงทุกชนิด | `os.walk()` |
+| 2 | **Label Detection** | ตรวจจับอารมณ์จากชื่อโฟลเดอร์ (Korean) หรือชื่อไฟล์ (RAVDESS) | Path/Filename Parsing |
+| 3 | **Audio Load** | โหลดไฟล์เสียงและแปลงเป็น NumPy Array ที่ Sample Rate มาตรฐาน | `librosa.load()` |
+| 4 | **Silence Removal** | ตัดความเงียบหัวท้ายออกเพื่อลด Noise ที่ไม่มีข้อมูล | `librosa.effects.trim()` |
+| 5 | **Pad / Cut** | ปรับความยาวสัญญาณให้คงที่ 3 วินาที (66,150 samples) | `np.pad()` |
+| 6 | **Feature Extraction** | สกัด MFCC จากสัญญาณเสียง ได้ Matrix ขนาด (T, 40) | `librosa.feature.mfcc()` |
+| 7 | **Data Augmentation** | สร้างตัวอย่างเพิ่มจาก Train Set เท่านั้น (Noise / Pitch / Time) | `librosa` effects |
+| 8 | **Train/Val/Test Split** | แบ่งข้อมูลก่อนทุกกระบวนการเพื่อป้องกัน Data Leakage | `train_test_split()` |
+| 9 | **StandardScaler** | Normalize Feature ให้มีค่าเฉลี่ย 0 และ Std 1 (Fit บน Train เท่านั้น) | `StandardScaler` |
+| 10 | **Model Training** | ฝึกสอน CNN + Bi-LSTM พร้อม EarlyStopping และ ReduceLROnPlateau | `model.fit()` |
+| 11 | **Save Best Model** | บันทึกโมเดลที่ดีที่สุด (val_accuracy สูงสุด) พร้อม Scaler | `.keras` + `.pkl` |
+
+### Inference Pipeline
+
+| ลำดับ | ขั้นตอน | รายละเอียด | หมายเหตุ |
+|---|---|---|---|
+| 1 | **Audio Input** | รับไฟล์เสียงรูปแบบ WAV / MP3 / FLAC | ไฟล์ใหม่ที่ไม่เคยเห็นระหว่าง Train |
+| 2 | **Preprocessing** | Trim → Pad/Cut ให้ยาว 3 วินาที เหมือน Training | ต้องใช้ parameter เดิมทุกอย่าง |
+| 3 | **Feature Extraction** | สกัด MFCC 40 coefficients | ต้องใช้ `n_mfcc=40` เหมือนตอน Train |
+| 4 | **Normalization** | Transform ด้วย Scaler ที่บันทึกไว้จาก Train | ห้าม Fit ใหม่ — ต้อง Load จาก `.pkl` |
+| 5 | **Model Prediction** | ส่ง Feature เข้าโมเดล CNN + Bi-LSTM | โมเดลคำนวณความน่าจะเป็นทั้ง 5 อารมณ์ |
+| 6 | **Softmax Output** | ได้ผลลัพธ์เป็น Probability ของแต่ละอารมณ์ รวมกัน = 1.0 | เช่น Angry=0.72, Happy=0.12, ... |
 
 ## 3.2 การออกแบบ Data Pipeline
 
 ### 3.2.1 Label Detection (2 วิธี)
 
-ระบบตรวจจับ Label ของไฟล์เสียงได้สองวิธีเพื่อรองรับ Dataset หลายรูปแบบ:
+&emsp;ระบบจำเป็นต้องอ่าน Label (ประเภทอารมณ์) ของไฟล์เสียงแต่ละไฟล์โดยอัตโนมัติ เนื่องจาก Dataset ที่ใช้มีสองแหล่งที่มีรูปแบบการจัดเก็บต่างกันโดยสิ้นเชิง จึงออกแบบระบบตรวจจับ Label ไว้ 2 วิธี ให้ทำงานตามลำดับความสำคัญ
 
 **วิธีที่ 1 — Path-based Detection (สำหรับ Korean Dataset):**
+
+&emsp;Korean Dataset จัดเก็บไฟล์เสียงโดยแยกโฟลเดอร์ตามอารมณ์ เช่น `dataset/angry/file.wav` ดังนั้นระบบจะตรวจสอบว่า path ของไฟล์มีชื่อโฟลเดอร์ที่ตรงกับคำสำคัญของอารมณ์หรือไม่ โดยแปลง path เป็นตัวพิมพ์เล็กและเปลี่ยน backslash เป็น forward slash ก่อน เพื่อให้การเปรียบเทียบทำงานได้ถูกต้องบนทุก OS จากนั้นวนลูปตรวจสอบกับ Dictionary `EMOTION_KEYWORDS` ทีละคำ ถ้าพบคำใดอยู่ในรูปแบบ `/keyword/` ในสาย path ก็กำหนด Label ทันทีและหยุดการค้นหา
+
 ```python
-# ถ้า path มีโฟลเดอร์ /angry/ ก็ label = "angry"
+# แปลง path ให้เป็นมาตรฐาน (lowercase + forward slash)
+path_check = file_path.lower().replace('\\', '/')
+
+# EMOTION_KEYWORDS = {'angry': 'angry', 'happy': 'happy', 'sad': 'sad', ...}
 for key, emotion_name in EMOTION_KEYWORDS.items():
+    # ตรวจสอบว่า path มีโฟลเดอร์ชื่อ /angry/ หรือ /happy/ เป็นต้น
     if f"/{key}/" in path_check:
         label = emotion_name
-        break
+        break  # พบแล้ว หยุดวนลูป
 ```
 
 **วิธีที่ 2 — Filename-based Detection (สำหรับ RAVDESS):**
+
+&emsp;RAVDESS Dataset ใช้รูปแบบชื่อไฟล์แบบ Structured Code เช่น `03-01-05-01-01-01-12.wav` โดยแต่ละตำแหน่งที่คั่นด้วยขีด (-) มีความหมายเฉพาะ ตำแหน่งที่ 3 (index 2 เมื่อนับจาก 0) คือ Emotion Code ได้แก่ `01` = neutral, `03` = happy, `04` = sad, `05` = angry ระบบจะแยกชื่อไฟล์ด้วย `.split('-')` แล้วตรวจสอบว่า `parts[2]` อยู่ใน RAVDESS_MAP หรือไม่ ถ้าใช่จะดึง Label ออกมาจาก Dictionary
+
 ```python
-# ไฟล์ 03-01-05-01-01-01-12.wav → parts[2] = '05' → Angry
-RAVDESS_MAP = {'03': 'happy', '04': 'sad', '05': 'angry', '01': 'neutral'}
-parts = filename.split('-')
+# RAVDESS_MAP จับคู่ Emotion Code กับชื่ออารมณ์
+RAVDESS_MAP = {'01': 'neutral', '03': 'happy', '04': 'sad', '05': 'angry'}
+
+filename = os.path.basename(path_check)   # ดึงเฉพาะชื่อไฟล์
+parts = filename.split('-')               # ['03','01','05','01','01','01','12.wav']
+
+# ตรวจสอบว่าไฟล์มีรูปแบบ RAVDESS และ Emotion Code อยู่ใน Map
 if len(parts) >= 3 and parts[2] in RAVDESS_MAP:
-    label = RAVDESS_MAP[parts[2]]
+    label = RAVDESS_MAP[parts[2]]         # parts[2]='05' → label='angry'
 ```
+
+&emsp;ระบบจะลองวิธีที่ 1 ก่อน หากไม่พบจึงลองวิธีที่ 2 และหากทั้งสองวิธีไม่สามารถระบุ Label ได้ ไฟล์นั้นจะถูกข้ามไปโดยไม่นำเข้า Dataset เพื่อป้องกันข้อมูลที่ไม่มี Label ปะปนกับข้อมูลที่ถูกต้อง
+
+---
 
 ### 3.2.2 Preprocessing Pipeline
 
+&emsp;ก่อนที่จะสกัด Feature จากไฟล์เสียง จำเป็นต้องผ่านขั้นตอน Preprocessing เพื่อทำให้ข้อมูลทุกไฟล์อยู่ในรูปแบบมาตรฐานเดียวกัน เนื่องจากไฟล์เสียงใน Dataset มีความยาวต่างกัน มี Sample Rate ต่างกัน และบางไฟล์มีความเงียบที่ต้นและปลายเสียง ซึ่งจะทำให้ Feature ที่สกัดออกมามีขนาดไม่เท่ากันและมี Noise ที่ไม่จำเป็น ขั้นตอน Preprocessing มีทั้งหมด 3 ขั้น ดังนี้
+
+**ขั้นที่ 1 — โหลดไฟล์เสียง และแปลง Sample Rate:**
+
+&emsp;ใช้ `librosa.load()` โหลดไฟล์เสียงและแปลงเป็น NumPy Array โดยบังคับ Sample Rate ให้เป็น 22,050 Hz เสมอ ไม่ว่าไฟล์ต้นฉบับจะบันทึกที่ความถี่ใดก็ตาม นอกจากนี้ยังกำหนด `duration=3` เพื่อตัดข้อมูลให้ไม่เกิน 3 วินาทีตั้งแต่ขั้นตอนการโหลด ซึ่งช่วยประหยัดหน่วยความจำสำหรับไฟล์ที่ยาวมาก
+
 ```python
-# โหลดเสียงด้วย Sample Rate มาตรฐาน
+# sr=22050 → บังคับ Resample เป็น 22,050 Hz ทุกไฟล์
+# duration=3 → ตัดให้ไม่เกิน 3 วินาทีตั้งแต่ต้น (ประหยัด RAM)
 data, sr = librosa.load(file_path, sr=22050, duration=3)
+# data = NumPy Array รูปร่าง (N_samples,) เช่น (66150,) สำหรับ 3 วินาที
+# sr   = 22050 เสมอ (ค่าที่เราบังคับ)
+```
 
-# ตัดความเงียบที่ปลายเสียง
+**ขั้นที่ 2 — ตัดความเงียบ (Silence Trimming):**
+
+&emsp;หลังจากโหลดแล้ว ไฟล์เสียงอาจมีความเงียบที่หัวและท้าย (เช่น ช่วงที่นักแสดงหายใจก่อนพูด หรือช่วงหลังจากพูดจบ) ความเงียบเหล่านี้ไม่มีข้อมูล Emotion ใดๆ แต่จะทำให้ MFCC ของแต่ละไฟล์มีรูปแบบต่างกันโดยไม่จำเป็น `librosa.effects.trim()` จะตัดส่วนที่มีพลังงานต่ำกว่า `top_db=25` ออก (25 dB ต่ำกว่า Peak ของสัญญาณ) แล้วคืนเฉพาะส่วนที่มีเสียงจริงๆ
+
+```python
+# top_db=25 หมายความว่า ตัดส่วนที่เงียบกว่า Peak 25 dB ออก
+# _ คือ index ของส่วนที่เหลือ (ไม่ได้ใช้)
 data, _ = librosa.effects.trim(data, top_db=25)
+# ผลลัพธ์: data มีความยาวสั้นลง เหลือเฉพาะส่วนที่มีเสียงพูดจริง
+```
 
-# ปรับให้ยาวเท่ากันทุกไฟล์ (3 วินาที = 66,150 samples)
+**ขั้นที่ 3 — ปรับความยาวให้เท่ากันทุกไฟล์ (Pad / Cut):**
+
+&emsp;โมเดล CNN + Bi-LSTM ต้องการ Input ที่มีขนาดคงที่ทุก Batch ดังนั้นหลังจากตัดความเงียบแล้ว ต้องปรับความยาวสัญญาณให้เท่ากับ 3 วินาทีพอดี (66,150 samples = 22,050 Hz × 3 วินาที) โดยถ้าสัญญาณสั้นกว่า 66,150 samples จะเติม 0 ต่อท้าย (Zero Padding) และถ้ายาวกว่าจะตัดเอาเฉพาะ 66,150 samples แรก
+
+```python
+SAMPLES_PER_TRACK = 22050 * 3  # = 66,150 samples
+
 if len(data) < SAMPLES_PER_TRACK:
+    # สัญญาณสั้นกว่า 3 วินาที → เติม 0 ต่อท้าย (Zero Padding)
+    # (0, SAMPLES_PER_TRACK - len(data)) = เติมด้านขวาเท่านั้น
     data = np.pad(data, (0, SAMPLES_PER_TRACK - len(data)), 'constant')
 else:
+    # สัญญาณยาวกว่า 3 วินาที → ตัดเอาแค่ 3 วินาทีแรก
     data = data[:SAMPLES_PER_TRACK]
+# ผลลัพธ์: data.shape = (66150,) เสมอ ไม่ว่าต้นฉบับจะยาวแค่ไหน
 ```
+
+---
 
 ### 3.2.3 การป้องกัน Data Leakage (Critical Process)
 
-Data Leakage คือปัญหาที่ข้อมูล Test ปนเข้าสู่กระบวนการ Train ทำให้ผลประเมินสูงเกินจริง
+**Data Leakage คืออะไร และทำไมถึงอันตราย**
 
-```
-❌ วิธีผิด (มี Data Leakage):
-   1. Load ข้อมูลทั้งหมด
-   2. Augment ทั้งหมด          ← ข้อมูล Augment ของ Train ปนกับ Test!
-   3. Split Train/Test
+&emsp;Data Leakage คือสถานการณ์ที่ข้อมูลจากชุด Test Set "รั่วไหล" เข้าไปมีอิทธิพลต่อกระบวนการสร้างโมเดล ทำให้โมเดลได้ "ดู" ข้อมูลที่ควรจะเป็นข้อมูลทดสอบไปแล้วบางส่วนก่อนที่จะถูกทดสอบจริง ผลที่ตามมาคือ Accuracy ที่วัดได้สูงกว่าความเป็นจริง ทำให้ประเมินประสิทธิภาพของโมเดลผิดพลาดอย่างมีนัยสำคัญ และเมื่อนำโมเดลไปใช้งานจริงกับข้อมูลที่ไม่เคยเห็นมาก่อน ประสิทธิภาพจะต่ำกว่าที่รายงานไว้มาก
 
-✅ วิธีถูก (ไม่มี Data Leakage):
-   1. Split File Paths ก่อน (train_files / val_files / test_files)
-   2. Augment เฉพาะ train_files เท่านั้น (x3 samples)
-   3. Load test_files แบบ Original ไม่ Augment
-   4. Fit StandardScaler บน X_train เท่านั้น
-   5. Transform X_val และ X_test ด้วย Scaler เดิม (ห้าม Fit ซ้ำ)
-```
+**แหล่งที่มาของ Data Leakage ในโครงงานนี้**
+
+&emsp;ใน Pipeline ของงาน SER มีโอกาสเกิด Data Leakage ได้ 2 จุดหลักคือ
+
+&emsp;**จุดที่ 1 — Data Augmentation ก่อน Split:** หากนำข้อมูลทั้งหมดมา Augment ก่อน แล้วค่อย Split โดยสมมติว่ามีไฟล์ต้นฉบับ A อยู่ในชุดข้อมูล เมื่อ Augment จะได้ไฟล์ A, A_noise, A_pitch, A_stretch จากนั้นเมื่อ Split แบบสุ่ม อาจเกิดกรณีที่ A อยู่ใน Test Set แต่ A_noise หรือ A_pitch ซึ่งสร้างมาจากไฟล์เดียวกันกลับอยู่ใน Train Set โมเดลจึงได้ฝึกกับข้อมูลที่แทบเหมือนกันกับข้อมูล Test ทำให้ผลประเมินสูงเกินจริง
+
+&emsp;**จุดที่ 2 — StandardScaler Fit บนข้อมูลรวม:** หากนำข้อมูล Train + Test + Val ทั้งหมดมา Fit Scaler พร้อมกัน ค่า Mean และ Standard Deviation ที่คำนวณได้จะมีข้อมูลของ Test ปนอยู่ด้วย โมเดลจึงทราบสถิติของข้อมูล Test ล่วงหน้าโดยอ้อม ซึ่งถือเป็น Leakage เช่นกัน
+
+**วิธีที่ผิด (เกิด Data Leakage):**
+
+| ลำดับ | ขั้นตอน | ปัญหาที่เกิด |
+|---|---|---|
+| 1 | โหลดไฟล์เสียงทั้งหมดพร้อมกัน | — |
+| 2 | Augment ข้อมูลทั้งหมด (Train + Test รวมกัน) | ไฟล์ Augment ของ Train ปะปนกับ Test |
+| 3 | Fit Scaler บนข้อมูลรวมทุกชุด | Scaler "เรียนรู้" สถิติของ Test ล่วงหน้า |
+| 4 | แบ่ง Train / Val / Test | แบ่งช้าเกินไป — Leakage เกิดขึ้นแล้ว |
+| 5 | Train โมเดล → วัด Accuracy | ผล Accuracy สูงเกินจริง ไม่สะท้อนประสิทธิภาพจริง |
+
+**วิธีที่ถูก (ป้องกัน Data Leakage ทุกจุด):**
+
+| ลำดับ | ขั้นตอน | เหตุผลที่สำคัญ |
+|---|---|---|
+| 1 | รวบรวม **File Paths** (ยังไม่โหลดข้อมูล) | ทำงานกับ Path เท่านั้น ไม่ยุ่งกับเนื้อหาไฟล์ |
+| 2 | **Split File Paths** → train_files / val_files / test_files | แบ่งก่อน ตั้งแต่ระดับ Path เพื่อรับประกันว่าไฟล์เดียวกันจะไม่อยู่คนละ Set |
+| 3 | **Augment เฉพาะ train_files** (สร้าง 3 ตัวอย่างต่อไฟล์) | val/test ไม่ถูก Augment ไม่มีทางที่ Augmented version จะปนเข้า Test |
+| 4 | โหลด val_files และ test_files แบบ **Original** (ไม่ Augment) | Test ใช้ข้อมูลจริงตามที่เป็น ไม่ผ่านการดัดแปลงใดๆ |
+| 5 | **Fit StandardScaler บน X_train เท่านั้น** | Scaler เรียนรู้เฉพาะสถิติของ Train ไม่รู้จัก Val/Test เลย |
+| 6 | **Transform** X_val และ X_test ด้วย Scaler ที่ Fit ไว้แล้ว | ใช้ค่า Mean/Std จาก Train มา Normalize Val/Test เท่านั้น |
+| 7 | **บันทึก Scaler** ไว้ในไฟล์ `.pkl` | ตอน Inference ต้อง Load Scaler เดิมมาใช้ ห้ามสร้าง Scaler ใหม่ |
+
+**ผลกระทบของการป้องกัน Data Leakage:**
+
+&emsp;เมื่อดำเนินการอย่างถูกต้องตามขั้นตอนข้างต้น ผล Accuracy ที่วัดได้บน Test Set จะสะท้อนประสิทธิภาพที่แท้จริงของโมเดลเมื่อนำไปใช้กับข้อมูลใหม่ที่ไม่เคยเห็นมาก่อน แม้ตัวเลข Accuracy อาจดูต่ำกว่าระบบที่มี Leakage แต่ถือว่าเชื่อถือได้และนำไปเปรียบเทียบกับงานวิจัยอื่นได้อย่างยุติธรรม ในโครงงานนี้ค่า Test Accuracy ที่วัดได้ประมาณ 68% จึงเป็นค่าที่เชื่อถือได้จริง ไม่ใช่ค่าที่ถูกเพิ่มขึ้นจาก Leakage
+
+---
 
 ### 3.2.4 Data Augmentation
 
+&emsp;Data Augmentation คือกระบวนการสร้างตัวอย่างข้อมูลเพิ่มเติมจากข้อมูลที่มีอยู่ โดยดัดแปลงในรูปแบบที่ยังคงความหมาย (Label) ไว้เหมือนเดิม เพื่อเพิ่มความหลากหลายของข้อมูล Train และช่วยให้โมเดล Generalize ได้ดีขึ้น
+
 **ตารางที่ 3.3 เทคนิค Data Augmentation ที่ใช้**
 
-| เทคนิค | วิธีการ | สูตร | ผลที่ต้องการ |
+| เทคนิค | วิธีการ | สูตร | จุดประสงค์ |
 |---|---|---|---|
-| **Gaussian Noise** | เพิ่ม Noise แบบสุ่ม | $x' = x + \alpha\mathcal{N}(0,1)$ | ทนต่อ Background Noise |
-| **Pitch Shifting** | ปรับ Pitch ±0.7 Semitones | `librosa.effects.pitch_shift` | ทนต่อความแตกต่างระหว่างผู้พูด |
-| **Time Stretching** | ขยาย/หดเวลา (rate=0.8) | `librosa.effects.time_stretch` | ทนต่อความเร็วในการพูด |
+| **Gaussian Noise** | เพิ่ม Noise แบบสุ่มเข้าสัญญาณ | $x' = x + \alpha\mathcal{N}(0,1)$ | ทำให้โมเดลทนต่อ Background Noise ในสภาพแวดล้อมจริง |
+| **Pitch Shifting** | ปรับระดับ Pitch ขึ้น/ลง ±0.7 Semitones | `librosa.effects.pitch_shift(n_steps=±0.7)` | ทำให้โมเดลทนต่อความแตกต่างของระดับเสียงระหว่างผู้พูดแต่ละคน |
+| **Time Stretching** | ยืดหรือหดเวลาของสัญญาณ (rate=0.8) | `librosa.effects.time_stretch(rate=0.8)` | ทำให้โมเดลทนต่อความเร็วในการพูดที่แตกต่างกัน |
 
-ผลลัพธ์: ไฟล์ต้นฉบับ 1 ไฟล์ → ตัวอย่าง 3 ตัวอย่าง (เพิ่ม Dataset 3 เท่า)
+&emsp;ผลลัพธ์ของ Augmentation คือไฟล์เสียง 1 ไฟล์จะถูกแปลงเป็น 3 ตัวอย่าง ได้แก่ ตัวอย่างที่เพิ่ม Noise / ตัวอย่างที่ปรับ Pitch / ตัวอย่างที่ยืดเวลา ทำให้ขนาดของ Train Set เพิ่มขึ้นเป็น 3 เท่า โดยไม่ต้องเก็บข้อมูลเพิ่ม สำคัญที่สุดคือ Augmentation ทำเฉพาะกับ **Train Set เท่านั้น** ตาม Anti-Data-Leakage Policy ที่อธิบายใน 3.2.3
+
+---
 
 ### 3.2.5 Normalization Strategy
+
+&emsp;ก่อนส่งข้อมูลเข้าโมเดล ต้อง Normalize Feature MFCC ให้อยู่ในช่วงที่เหมาะสม เพราะ MFCC แต่ละ Coefficient มีช่วงค่าที่แตกต่างกันมาก เช่น Coefficient ที่ 1 อาจมีค่าในช่วง -200 ถึง +50 ในขณะที่ Coefficient ที่ 10 อาจมีค่าในช่วง -30 ถึง +30 หากไม่ Normalize โมเดลจะให้ความสำคัญกับ Coefficient ที่มีค่าสูงกว่ามากเกินไป ทำให้เรียนรู้ได้ช้าและ Converge ได้ยาก
+
+&emsp;โครงงานนี้ใช้ **StandardScaler** ซึ่งแปลงข้อมูลให้มีค่าเฉลี่ย (Mean) = 0 และ ส่วนเบี่ยงเบนมาตรฐาน (Std) = 1 ตามสูตร:
+
+$$z = \frac{x - \mu}{\sigma}$$
+
+โดยที่ $\mu$ คือค่าเฉลี่ยของ Train Set และ $\sigma$ คือ Standard Deviation ของ Train Set
+
+**กระบวนการ Normalization ที่ถูกต้อง:**
 
 ```python
 scaler = StandardScaler()
 N, T, F = X_train.shape
+# N = จำนวนตัวอย่าง, T = Time Steps (130), F = Features (40)
 
-# Fit เฉพาะบน Train (ห้าม Fit ซ้ำ!)
+# ขั้นที่ 1: Reshape จาก (N, T, F) เป็น (N, T×F) เพื่อให้ Scaler คำนวณได้
+# จากนั้น fit_transform จะ:
+#   - คำนวณ Mean และ Std ของแต่ละ Feature จาก Train เท่านั้น
+#   - Normalize ข้อมูล Train ด้วยค่า Mean/Std ที่คำนวณได้
+#   - Reshape กลับเป็น (N, T, F)
 X_train = scaler.fit_transform(X_train.reshape(N, -1)).reshape(N, T, F)
 
-# Transform ด้วย Train statistics เท่านั้น
-X_val  = scaler.transform(X_val.reshape(-1, T*F)).reshape(-1, T, F)
+# ขั้นที่ 2: Normalize Val ด้วยค่า Mean/Std จาก Train (ห้าม fit ใหม่!)
+# scaler.transform ใช้ค่า Mean/Std ที่เรียนรู้จาก Train มา Apply กับ Val
+X_val = scaler.transform(X_val.reshape(-1, T*F)).reshape(-1, T, F)
+
+# ขั้นที่ 3: Normalize Test ด้วยค่า Mean/Std จาก Train เช่นกัน
 X_test = scaler.transform(X_test.reshape(-1, T*F)).reshape(-1, T, F)
 
-# บันทึก Scaler ไว้ใช้ตอน Inference
+# ขั้นที่ 4: บันทึก Scaler ไว้ใช้ตอน Inference
+# เมื่อต้องการทดสอบไฟล์เสียงใหม่ ต้อง Load Scaler นี้มา Transform ก่อนเสมอ
 with open('scaler.pkl', 'wb') as f:
-    pickle.dump(scaler, f)
+    pickle.dump(scaler, f)  # บันทึกด้วย Pickle เพื่อ Load กลับมาใช้ได้
 ```
 
-## 3.3 สถาปัตยกรรมโมเดล CNN + Bi-LSTM
+&emsp;เหตุผลที่ต้อง Fit Scaler บน Train Set เท่านั้น เพราะหากนำ Val หรือ Test มา Fit ด้วย ค่า Mean และ Std จะถูกกำหนดจากข้อมูล Test ทำให้โมเดลทราบสถิติของข้อมูลทดสอบล่วงหน้า ซึ่งเป็น Data Leakage รูปแบบหนึ่ง นอกจากนี้การบันทึก Scaler ไว้ในไฟล์ `.pkl` มีความสำคัญอย่างยิ่ง เพราะเมื่อต้องการทำนายอารมณ์จากไฟล์เสียงใหม่ในอนาคต จะต้อง Normalize ด้วยค่า Mean/Std ชุดเดิมกันกับตอน Train เท่านั้น หาก Normalize ด้วยค่าใหม่ที่คำนวณจากไฟล์เสียงเพียงไฟล์เดียว ผลการทำนายจะผิดพลาดอย่างมาก
 
+## 3.3 สถาปัตยกรรมโมเดล EmotionResNet (Per-Language)
+
+&emsp;โมเดลที่ใช้ในโครงงานนี้คือ **EmotionResNet** ซึ่งเป็น Residual Convolutional Neural Network สำหรับการจำแนกอารมณ์จากภาพ Mel Spectrogram รับ Input เป็น Tensor ขนาด **(Batch, 1, 128, 130)** ซึ่งเป็น Single-channel Mel Spectrogram (128 Mel Bands × 130 Time Frames) โมเดลออกแบบมาให้ฝึกสอนแยกสำหรับแต่ละภาษา โดยแต่ละภาษามีจำนวน Output Class ต่างกันตามอารมณ์ที่มีใน Dataset
+
+**หลักการ Residual Network (ResNet):**
+
+&emsp;ResNet (He et al., 2016) แก้ปัญหา Vanishing Gradient ใน Deep Network ด้วย **Skip Connection** ที่นำ Input ของ Block บวกเข้ากับ Output โดยตรง:
+
+$$\text{Output} = \mathcal{F}(x, \{W_i\}) + x$$
+
+ทำให้ Gradient ไหลผ่านเส้นทาง Residual ได้โดยตรง โมเดลเรียนรู้เฉพาะ "ส่วนต่าง" (Residual) จาก Identity Mapping ซึ่ง Converge ได้เร็วกว่าและ Generalize ได้ดีกว่า Plain CNN
+
+**โครงสร้างสถาปัตยกรรม EmotionResNet:**
+
+**ส่วนที่ 1 — Stem Layer (Feature Extraction เบื้องต้น):**
 ```
-Input Shape: (Batch_Size, 130 time_steps, 40 features)
-                          │
-          ┌───────────────┴────────────────────┐
-          │         CNN Block 1                │
-          │  Conv1D(256, kernel=5, ReLU)        │
-          │  BatchNormalization                 │
-          │  MaxPooling1D(pool=2)              │
-          │  Dropout(0.3)                      │
-          └───────────────┬────────────────────┘
-                          │ (Batch, 65, 256)
-          ┌───────────────┴────────────────────┐
-          │         CNN Block 2                │
-          │  Conv1D(128, kernel=5, ReLU)        │
-          │  BatchNormalization                 │
-          │  MaxPooling1D(pool=2)              │
-          │  Dropout(0.3)                      │
-          └───────────────┬────────────────────┘
-                          │ (Batch, 32, 128)
-          ┌───────────────┴────────────────────┐
-          │      Bidirectional LSTM 1          │
-          │  BiLSTM(128, return_seq=True)      │
-          │  Dropout(0.3)                      │
-          └───────────────┬────────────────────┘
-                          │ (Batch, 32, 256)
-          ┌───────────────┴────────────────────┐
-          │      Bidirectional LSTM 2          │
-          │  BiLSTM(64)                        │
-          │  Dropout(0.3)                      │
-          └───────────────┬────────────────────┘
-                          │ (Batch, 128)
-          ┌───────────────┴────────────────────┐
-          │         Dense Layers               │
-          │  Dense(64, ReLU, L2=0.001)         │
-          │  Dropout(0.3)                      │
-          │  Dense(5, Softmax)                 │
-          └───────────────┬────────────────────┘
-                          │
-          Output: [Angry, Happy, Sad, Neutral, Surprise]
-                  (ความน่าจะเป็นของแต่ละอารมณ์ รวมกัน = 1.0)
+Input: (Batch, 1, 128, 130)
+Conv2d(1→64, kernel=3, padding=1) → BatchNorm2d(64) → ReLU
+MaxPool2d(kernel=2, stride=2)
+Output: (Batch, 64, 64, 65)
 ```
 
-**Total Parameters: ~653,061**
+**ส่วนที่ 2 — Residual Block Layer 1 (Low-level Features):**
+```
+ResBlock: Conv2d(64→64) + BN + ReLU + Conv2d(64→64) + BN + Skip Connection
+Output: (Batch, 64, 64, 65)
+```
 
-**เหตุผลในการเลือกสถาปัตยกรรมนี้:**
-- CNN Block สกัด Local Temporal Pattern (เช่น การเปลี่ยน Pitch ระยะสั้น)
-- Bidirectional LSTM จับ Long-term Dependency (เช่น รูปแบบอารมณ์ที่กระจายทั้งประโยค)
-- การรวมกันของทั้งสองชั้นให้ Accuracy สูงสุดสำหรับงาน SER ตามงานวิจัยของ Zhao et al. (2019)
+**ส่วนที่ 3 — Residual Block Layer 2 (Mid-level Features):**
+```
+ResBlock: Conv2d(64→128, stride=2) + BN + ReLU + Conv2d(128→128) + BN
+Skip Connection: Conv2d(64→128, stride=2)  [Projection Shortcut]
+Output: (Batch, 128, 32, 33)
+```
+
+**ส่วนที่ 4 — Residual Block Layer 3 (High-level Features):**
+```
+ResBlock: Conv2d(128→256, stride=2) + BN + ReLU + Conv2d(256→256) + BN
+Skip Connection: Conv2d(128→256, stride=2)  [Projection Shortcut]
+Output: (Batch, 256, 16, 17)
+```
+
+**ส่วนที่ 5 — Adaptive Pooling + Classifier:**
+```
+AdaptiveAvgPool2d(output_size=(4,4))
+Output: (Batch, 256, 4, 4)
+
+Classifier:
+  Flatten → Linear(256*4*4=4096, 256) → ReLU → Dropout(0.4)
+  → Linear(256, n_classes)  [n_classes = 4-7 ตามภาษา]
+```
+
+**ตารางที่ 3.4 สรุปสถาปัตยกรรม EmotionResNet ชั้นต่อชั้น**
+
+| ส่วน | Layer | Output Shape | บทบาทหน้าที่ |
+|---|---|---|---|
+| Stem | Conv2d(1→64,k=3)+BN+ReLU+MaxPool | (B, 64, 64, 65) | สกัด Low-level Spectral Feature |
+| Layer1 | ResBlock(64→64) | (B, 64, 64, 65) | ปรับ Feature ระดับต่ำ |
+| Layer2 | ResBlock(64→128, stride=2) | (B, 128, 32, 33) | Feature ระดับกลาง + Downsampling |
+| Layer3 | ResBlock(128→256, stride=2) | (B, 256, 16, 17) | Feature ระดับสูง + Downsampling |
+| Pool | AdaptiveAvgPool2d(4,4) | (B, 256, 4, 4) | ย่อเป็น Fixed-size Representation |
+| Classifier | Flatten+Linear(4096→256)+ReLU+Drop+Linear(256→n) | (B, n) | จำแนกอารมณ์ n ประเภท |
+
+**เหตุผลในการเลือก ResNet สำหรับ Mel Spectrogram:**
+
+&emsp;Mel Spectrogram มีลักษณะเป็นภาพ 2D (ความถี่ × เวลา) ทำให้สถาปัตยกรรม 2D CNN เหมาะสมกว่า 1D CNN หรือ LSTM ที่รับ Sequential Feature ResNet โดยเฉพาะให้ประสิทธิภาพดีเพราะ:
+1. **Skip Connection** ช่วยให้ Gradient ไหลย้อนกลับได้อย่างมีประสิทธิภาพในทุกชั้น ป้องกัน Vanishing Gradient
+2. **Residual Learning** ทำให้โมเดลเรียนรู้เฉพาะส่วนที่ต่างจาก Identity ไม่ต้อง Re-learn ทุกอย่าง
+3. **AdaptiveAvgPool** ทำให้รับ Input ที่มีขนาดต่างกันได้โดยไม่ต้องแก้ Architecture
+
+**Language Detector (SVM Pipeline):**
+
+&emsp;นอกจาก EmotionResNet สำหรับแต่ละภาษา ระบบยังมี **Language Detector** ที่ใช้ SVM Pipeline:
+
+```python
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('pca', PCA(n_components=80)),
+    ('clf', SVC(kernel='rbf', C=10, gamma='scale', probability=True))
+])
+```
+
+&emsp;Input คือ Mel Spectrogram Flatten เป็น Vector แล้วผ่าน PCA ลดมิติเหลือ 80 Principal Components ก่อนส่งเข้า SVM ผลลัพธ์คือ 5-class Language Prediction (TH/ZH/JA/KO/EN) ด้วย Accuracy **98.54%** ซึ่งสูงกว่า Deep Learning เพราะปัญหา Language ID มี Decision Boundary ที่ชัดเจนกว่า Emotion Recognition
 
 ## 3.4 การกำหนด Training Configuration
 
@@ -661,25 +776,41 @@ Input Shape: (Batch_Size, 130 time_steps, 40 features)
 
 | Parameter | ค่าที่ใช้ | เหตุผล |
 |---|---|---|
-| Sample Rate | 22,050 Hz | มาตรฐาน Librosa, ครอบคลุม Speech Frequency Range |
+| Sample Rate | **16,000 Hz** | มาตรฐาน Speech Processing สมัยใหม่, ลดขนาดข้อมูล |
 | Duration | 3 วินาที | ครอบคลุมอารมณ์ที่แสดงออก, ไม่หนักเกินไป |
-| n_mfcc | 40 / 128 | 40 = เร็ว; 128 = ละเอียด |
+| Mel Bands | 128 | ความละเอียดเพียงพอ, ครอบคลุม 0–8000 Hz |
+| Time Frames | 130 | จาก hop_length=512 กับ 3 วินาที × 16000 Hz |
 | Optimizer | Adam (lr=0.001) | ปรับ Learning Rate อัตโนมัติ |
-| Loss Function | Categorical Cross-Entropy | Multi-class Classification มาตรฐาน |
-| Batch Size | 64 / 32 / 16 | ขึ้นกับ VRAM ที่มีอยู่ |
-| Max Epochs | 100–150 | หยุดเองด้วย EarlyStopping |
-| EarlyStopping | patience=10–12 | ป้องกัน Overfitting |
-| ReduceLROnPlateau | factor=0.5, patience=4–5 | Fine-tune ใกล้ Optimum |
-| Mixed Precision | float16 | เพิ่มความเร็วบน RTX 3060 (Tensor Cores) |
+| Loss Function | Cross-Entropy | Multi-class Classification มาตรฐาน |
+| Batch Size | 32 | สมดุลระหว่างความเร็วและ Generalization |
+| Max Epochs | 50 | เพียงพอสำหรับข้อมูลขนาดนี้ |
+| EarlyStopping | patience=5 | ป้องกัน Overfitting หยุดเร็ว |
+| ReduceLROnPlateau | factor=0.5, patience=3 | Fine-tune ใกล้ Optimum |
+| Framework | **PyTorch** + torchaudio | Flexibility สูง, Dynamic Graph |
 
-**ตารางที่ 3.1 โมเดลที่พัฒนาทั้งหมดในโครงงาน**
+**ตารางที่ 3.3 เทคนิค Data Augmentation ที่ใช้**
 
-| ไฟล์ | Features | Batch | Augment | จุดเด่น |
-|---|---|---|---|---|
-| [Train_Universal_Super.py](SeniorP1/รวมภาษา Ai/Train_Universal_Super.py) | MFCC 40 | 64 | ✅ | เร็ว, ประหยัด RAM, โมเดลหลัก |
-| [Train_Test.py](SeniorP1/รวมภาษา Ai/Train_Test.py) | MFCC 40 | 32 | ✅ | Anti-Data-Leakage เข้มงวดที่สุด |
-| [Train_Model_RTX3060.py](SeniorP1/รวมภาษา Ai/Train_Model_RTX3060.py) | MFCC 128 + Mel | 32 | ✅ | High-Resolution, Mixed Precision |
-| [Train_model_res.py](SeniorP1/รวมภาษา Ai/Train_model_res.py) | MFCC 128 + Mel | 16 | ✅ | High-Resolution สำหรับ VRAM ต่ำ |
+| เทคนิค | รายละเอียด | จุดประสงค์ |
+|---|---|---|
+| **SpecAugment (Frequency Masking)** | Mask แบบสุ่มบนแกนความถี่ (F=27) จำนวน 1-2 แถบ | ทำให้โมเดลทนต่อการสูญเสียข้อมูลบางความถี่ |
+| **SpecAugment (Time Masking)** | Mask แบบสุ่มบนแกนเวลา (T=30) จำนวน 1-2 แถบ | ทำให้โมเดลทนต่อการสูญเสียข้อมูลบางช่วงเวลา |
+| **Pitch Shift** | ±1, ±2 Semitones | ทำให้โมเดลทนต่อความแตกต่างของระดับเสียง |
+| **Time Stretch** | Rate 0.85 และ 1.15 | ทำให้โมเดลทนต่อความเร็วในการพูดที่ต่างกัน |
+| **Gaussian Noise** | SNR = 20 dB | ทำให้โมเดลทนต่อ Background Noise |
+
+**ตารางที่ 3.1 ไฟล์หลักใน Pipeline ระบบ Phase 2**
+
+| ไฟล์ | หน้าที่ | Output |
+|---|---|---|
+| [data_pipeline.py](SeniorP1/แยกภาษา/data_pipeline.py) | สกัด Mel Spectrogram ทุกภาษา | `{Lang}_mel_features.npy` |
+| [language_detector.py](SeniorP1/แยกภาษา/language_detector.py) | Train/Eval Language Identifier SVM | `lang_detector.pkl` |
+| [train_per_language.py](SeniorP1/แยกภาษา/train_per_language.py) | Train EmotionResNet แยกต่อภาษา | `{Lang}_model.pt`, `{Lang}_label_encoder.pkl` |
+| [evaluate.py](SeniorP1/แยกภาษา/evaluate.py) | Batch Evaluation ทุกภาษา | `results/evaluation_report.txt` |
+| [baseline_comparison.py](SeniorP1/แยกภาษา/baseline_comparison.py) | เปรียบ ResNet กับ SVM/RF/GB | `results/baseline_comparison/` |
+| [crosslingual_analysis.py](SeniorP1/แยกภาษา/crosslingual_analysis.py) | วิเคราะห์ Feature Space ข้ามภาษา | `results/crosslingual/` |
+| [wav2vec2_pipeline.py](SeniorP1/แยกภาษา/wav2vec2_pipeline.py) | สกัด Wav2Vec2 embeddings + Train MLP | `{Lang}_w2v_model.pt` |
+| [web_demo.py](SeniorP1/แยกภาษา/web_demo.py) | Gradio Web Interface | URL localhost:7860 |
+| [run_all.py](SeniorP1/แยกภาษา/run_all.py) | รัน Pipeline ทั้งหมดต่อเนื่อง | — |
 
 ---
 
@@ -687,154 +818,189 @@ Input Shape: (Batch_Size, 130 time_steps, 40 features)
 
 ## 4.1 ภาพรวมการออกแบบ (Overview Design)
 
-### 4.1.1 โครงสร้างไฟล์โปรแกรม
+### 4.1.1 ภาพรวมสถาปัตยกรรมระบบ Phase 2
+
+&emsp;ระบบ Phase 2 ใช้สถาปัตยกรรม **Per-Language Model** ที่ประกอบด้วย 3 ส่วนหลัก ดังนี้
 
 ```
-SeniorP1/รวมภาษา Ai/
-│
-├── [เครื่องมือตรวจสอบ]
-│   ├── Check Gpu.py           ← ตรวจสอบ GPU / TensorFlow Version
-│   └── Check_Data_Reader.py   ← นับจำนวนไฟล์เสียงในแต่ละ Class
-│
-├── [เตรียมข้อมูล]
-│   ├── Label.py               ← ดาวน์โหลด Korean Dataset จาก Hugging Face
-│   └── Repair_Scaler.py       ← สร้าง StandardScaler ย้อนหลังจาก Dataset
-│
-├── [Training]
-│   ├── Train_Universal_Super.py   ← โมเดลหลัก (MFCC 40, เร็วที่สุด)
-│   ├── Train_Test.py              ← Anti-Leakage Strict Mode
-│   ├── Train_Model_RTX3060.py     ← High-Resolution (MFCC 128 + Mel)
-│   └── Train_model_res.py         ← High-Resolution, Low VRAM Version
-│
-├── [Inference / Testing]
-│   └── Test_Real_World.py     ← ทดสอบไฟล์เสียงเดียว (Real-world Test)
-│
-└── Test modle/
-    ├── Test_Final.py          ← Interactive Test (Universal Model)
-    ├── Test_Super_Model.py    ← Interactive Test with Safety Logic
-    ├── Evaluate_Model.py      ← Batch Evaluation (Instance Normalization)
-    └── Evaluate_Fix_Final.py  ← Batch Evaluation (Rebuilt Scaler Method)
+[ไฟล์เสียงใหม่]
+       │
+       ▼
+[Mel Spectrogram Extraction]
+  SR=16kHz, n_mels=128, hop=512, T=130
+       │
+       ▼
+[Language Detector — SVM Pipeline]
+  StandardScaler → PCA(80) → SVM(RBF)
+  Accuracy: 98.54%
+       │
+       ├─── ภาษาไทย  ──► [Thai EmotionResNet]    88.40% (4 emotions)
+       ├─── ภาษาจีน  ──► [Chinese EmotionResNet] 86.62% (6 emotions)
+       ├─── ภาษาญี่ปุ่น ─► [Japan EmotionResNet]  84.36% (6 emotions)
+       ├─── ภาษาอังกฤษ ─► [English EmotionResNet] 82.84% (7 emotions)
+       └─── ภาษาเกาหลี ─► [Korean EmotionResNet]  53.57% (5 emotions)
+                           [Korean SVM Baseline]   72.62% ← ดีกว่า
+       │
+       ▼
+[Predicted Emotion + Confidence Score]
 ```
 
-### 4.1.2 Model Summary
+### 4.1.2 คำอธิบายการทำงานของแต่ละไฟล์ Python (Phase 2)
 
-```
-Model: CNN + Bidirectional LSTM (Super Universal Model)
-Total Parameters: 653,061 (ทั้งหมดเป็น Trainable)
-─────────────────────────────────────────────────────────
-Layer                      Output Shape         Params
-─────────────────────────────────────────────────────────
-Conv1D (256, kernel=5)     (None, 130, 256)      51,456
-BatchNormalization          (None, 130, 256)       1,024
-MaxPooling1D (pool=2)       (None,  65, 256)           0
-Dropout (0.3)               (None,  65, 256)           0
-─────────────────────────────────────────────────────────
-Conv1D (128, kernel=5)      (None,  65, 128)     163,968
-BatchNormalization           (None,  65, 128)         512
-MaxPooling1D (pool=2)        (None,  32, 128)           0
-Dropout (0.3)                (None,  32, 128)           0
-─────────────────────────────────────────────────────────
-Bidirectional LSTM (128)     (None,  32, 256)     263,168
-Dropout (0.3)                (None,  32, 256)           0
-─────────────────────────────────────────────────────────
-Bidirectional LSTM (64)      (None,      128)     164,352
-Dropout (0.3)                (None,      128)           0
-─────────────────────────────────────────────────────────
-Dense (64, ReLU, L2)         (None,       64)       8,256
-Dropout (0.3)                (None,       64)           0
-Dense (5, Softmax)            (None,        5)         325
-─────────────────────────────────────────────────────────
-```
+&emsp;โครงงานนี้ประกอบด้วยไฟล์ Python หลัก ดังนี้
+
+---
+
+**กลุ่มที่ 1 — Data Pipeline (เตรียมข้อมูล)**
+
+**1. data_pipeline.py**
+
+&emsp;ไฟล์หลักสำหรับสกัด Mel Spectrogram จากไฟล์เสียงทุกภาษา กระบวนการทำงาน: โหลดไฟล์เสียง → Resample เป็น 16,000 Hz → Trim Silence → Pad/Cut ให้ยาว 3 วินาที → คำนวณ Mel Spectrogram (n_mels=128, hop_length=512) → แปลงเป็น dB Scale → บันทึกเป็น `.npy` array รูปร่าง (1, 128, 130) นอกจากนี้ยังรวม Label Detection จากชื่อโฟลเดอร์และชื่อไฟล์ ป้องกัน Data Leakage ด้วยการ Split ก่อน Augmentation
+
+**2. download_extra_data.py**
+
+&emsp;ไฟล์สำหรับหาและดาวน์โหลดข้อมูลเพิ่มเติมสำหรับภาษาที่มีข้อมูลน้อย มีสองกลยุทธ์: กลยุทธ์ที่ 1 ค้นหา Dataset จาก Hugging Face Hub API, กลยุทธ์ที่ 2 (Fallback) สร้าง Audio Augmentation จากข้อมูลที่มีอยู่ (Pitch Shift ±1/±2 Semitones, Time Stretch 0.85/1.15, Gaussian Noise SNR=20dB)
+
+---
+
+**กลุ่มที่ 2 — Language Detection**
+
+**3. language_detector.py**
+
+&emsp;สร้างและประเมิน Language Identifier SVM Pipeline กระบวนการ: โหลด Mel Spectrogram ทุกภาษา → Flatten เป็น Vector → StandardScaler → PCA(80) → SVM(RBF, C=10) → Train/Test Split 80/20 → บันทึกเป็น `lang_detector.pkl` ผลลัพธ์: 98.54% accuracy บน 5 ภาษา
+
+---
+
+**กลุ่มที่ 3 — Training โมเดล**
+
+**4. train_per_language.py**
+
+&emsp;Train EmotionResNet สำหรับแต่ละภาษาแยกกัน กระบวนการ: โหลด Mel Spectrogram ของแต่ละภาษา → Train/Val/Test Split (70/15/15) → สร้าง EmotionResNet ด้วย n_classes ตามภาษา → Train ด้วย Adam + ReduceLROnPlateau + EarlyStopping → บันทึกโมเดลที่ดีที่สุด (`{Lang}_model.pt`) พร้อม Label Encoder
+
+**5. wav2vec2_pipeline.py**
+
+&emsp;สกัด Wav2Vec2 Embeddings จาก `facebook/wav2vec2-large-xlsr-53` สำหรับภาษาที่มีไฟล์เสียง (TH, EN, KO) แล้ว Train MLP Classifier บน Embeddings ที่ได้ เปรียบเทียบกับ ResNet เพื่อดูว่า Pre-trained Speech Representation ช่วยได้หรือไม่ ใช้ `Wav2Vec2FeatureExtractor` แทน `Wav2Vec2Processor` เพราะ `facebook/wav2vec2-large-xlsr-53` ไม่มี vocab.json
+
+---
+
+**กลุ่มที่ 4 — ประเมินผลและวิเคราะห์**
+
+**6. evaluate.py**
+
+&emsp;Batch Evaluation ทุกภาษาพร้อมกัน โหลด Test Set ที่บันทึกไว้ (`{Lang}_X_test.npy`, `{Lang}_y_test.npy`) → โหลดโมเดลแต่ละภาษา → คำนวณ Accuracy, F1-Score, Classification Report → บันทึกรายงาน `results/evaluation_report.txt`
+
+**7. baseline_comparison.py**
+
+&emsp;เปรียบเทียบ EmotionResNet กับ Classical ML Baselines (SVM, Random Forest, Gradient Boosting) บน Mel Spectrogram Features แบบ Flatten + PCA ผลบันทึกใน `results/baseline_comparison/`
+
+**8. crosslingual_analysis.py**
+
+&emsp;วิเคราะห์ความคล้ายคลึงระหว่างภาษาต่างๆ ในระดับ Feature Space สร้าง Radar Charts, Similarity Matrices และ Within/Between Language Distance Plots บันทึกผลใน `results/crosslingual/`
+
+---
+
+**กลุ่มที่ 5 — Web Demo และระบบอัตโนมัติ**
+
+**9. web_demo.py**
+
+&emsp;Web Interface แบบ Interactive สร้างด้วย Gradio 6.x ผู้ใช้สามารถอัพโหลดหรือบันทึกเสียง → ระบบตรวจจับภาษาอัตโนมัติ → ทำนายอารมณ์ → แสดง Confidence Scores พร้อม Bar Chart สำหรับทุกอารมณ์ รันที่ `http://localhost:7860`
+
+**10. run_all.py**
+
+&emsp;Runner Script ที่รัน Pipeline ทั้งหมดต่อเนื่อง มี Flags ให้ข้ามขั้นตอนที่ทำเสร็จแล้ว (`--skip-download`, `--skip-extract`, `--skip-train`, `--skip-w2v`, `--skip-crosslingual`) แสดง Status Table สรุปผลทุกขั้นตอนเมื่อเสร็จสิ้น
+
+### 4.1.2 รายละเอียด Parameter ของโมเดล EmotionResNet
+
+&emsp;EmotionResNet มีโครงสร้างที่กะทัดรัดแต่มีประสิทธิภาพสูง ด้านล่างแสดงจำนวน Parameter โดยประมาณ (สำหรับ n_classes=5):
+
+**ตารางที่ 4.0 จำนวน Parameter แยกตามส่วนของ EmotionResNet**
+
+| ส่วน | รายละเอียด | Parameters (approx.) |
+|---|---|---|
+| Stem | Conv2d(1,64,3)+BN+MaxPool | ~1,856 |
+| Layer1 | ResBlock(64→64) ×2 | ~148,736 |
+| Layer2 | ResBlock(64→128, stride=2) | ~230,656 |
+| Layer3 | ResBlock(128→256, stride=2) | ~919,808 |
+| Classifier | Linear(4096→256)+Dropout+Linear(256→n) | ~1,049,856 |
+| **รวมทั้งหมด** | | **~2,350,000** |
+
+&emsp;ขนาดโมเดลประมาณ 2.3 ล้าน Parameter ต่อโมเดลต่อภาษา เมื่อรวมทั้ง 5 ภาษาจะมีโมเดลรวมประมาณ 11.5 ล้าน Parameter (ไม่รวม Language Detector SVM)
 
 ### 4.1.3 ลำดับการรันระบบ
 
 ```bash
-# 1. ตรวจสอบ GPU และ TensorFlow
-python "Check Gpu.py"
+# รันทั้ง Pipeline ครั้งแรก
+python run_all.py
 
-# 2. ตรวจสอบ Dataset ว่าครบและสมดุลหรือไม่
-python "Check_Data_Reader.py"
+# รัน Pipeline โดยข้ามขั้นตอนที่ทำเสร็จแล้ว
+python run_all.py --skip-download --skip-extra-data --skip-extract
 
-# 3. เทรนโมเดล (เลือกอย่างใดอย่างหนึ่งตามทรัพยากร)
-python "Train_Universal_Super.py"      # แนะนำ: เร็ว + ประหยัด
-python "Train_Model_RTX3060.py"        # สำหรับ Accuracy สูงสุด
-
-# 4. (ถ้าจำเป็น) สร้าง Scaler ย้อนหลัง
-python "Repair_Scaler.py"
-
-# 5. ทดสอบแบบ Interactive
-python "Test modle/Test_Final.py"
-
-# 6. ประเมินผลจริงแบบ Batch
-python "Test modle/Evaluate_Fix_Final.py"
+# รัน Web Demo
+python web_demo.py --port 7860
 ```
+## 4.2 ผลการทดลองและการวิเคราะห์
 
-## 4.2 ผลการทดลองและการวิเคราะห์ปัญหา
+### 4.2.1 ผลการทดลองหลัก — Per-Language ResNet
 
-### 4.2.1 ผลการทดลองเบื้องต้น
+**ตารางที่ 4.1 ผลการทดลองของ Per-Language ResNet (Test Set)**
 
-**ตารางที่ 4.1 ผลการทดลองของ Multilingual Unified Model**
-
-| Metric | ค่าที่ได้ | เป้าหมาย | ผ่าน? | หมายเหตุ |
-|---|---|---|---|---|
-| Train Accuracy | ~85% | ≥ 80% | ✅ | โมเดลเรียนรู้ข้อมูล Train ได้ดี |
-| Validation Accuracy | ~72% | ≥ 75% | ❌ | ต่ำกว่าเป้าหมาย 3% |
-| Test Accuracy | ~68% | ≥ 75% | ❌ | ต่ำกว่าเป้าหมาย 7% |
-| Train-Val Gap | ~13% | < 10% | ❌ | แสดงอาการ Overfitting |
-| Training Epochs | ~45-60 | — | — | EarlyStopping ทำงาน |
-
-**การวิเคราะห์เบื้องต้น:** Gap ระหว่าง Train Accuracy (85%) กับ Test Accuracy (68%) ที่สูงถึง 17% บ่งชี้ว่าโมเดลกำลัง Overfit กับข้อมูลหรือ Domain ใดโดเมนหนึ่งอย่างชัดเจน
-
-### 4.2.2 การวิเคราะห์ Confusion Matrix
-
-**ตารางที่ 4.2 Confusion Matrix ของ Multilingual Model (%)**
-
-| Actual \ Predicted | Angry | Happy | Sad | Neutral | Surprise |
+| ภาษา | จำนวน Test Samples | จำนวนอารมณ์ | Accuracy | F1-Macro | F1-Weighted |
 |---|---|---|---|---|---|
-| **Angry** | **72%** | 5% | 8% | 10% | 5% |
-| **Happy** | 8% | **65%** | 3% | 9% | 15% |
-| **Sad** | 5% | 3% | **74%** | 15% | 3% |
-| **Neutral** | 7% | 6% | 12% | **71%** | 4% |
-| **Surprise** | 10% | 18% | 4% | 5% | **63%** |
+| Thai | 6,042 | 4 | **88.40%** | 88.49% | 88.41% |
+| Chinese | 538 | 6 | **86.62%** | 86.29% | 86.55% |
+| Japan | 243 | 6 | **84.36%** | 84.34% | 84.31% |
+| English | 2,285 | 7 | **82.84%** | 81.53% | 82.76% |
+| Korean | 84 | 5 | **53.57%** | 47.77% | 52.86% |
+| **เฉลี่ย** | | | **79.16%** | | **78.98%** |
+| **เป้าหมาย** | | | **75%** | | |
+| **ผ่าน?** | | | **✅ บรรลุ** | | |
 
-**การวิเคราะห์ Confusion Pattern:**
+### 4.2.2 เปรียบเทียบ ResNet กับ Classical ML Baseline
 
-- **Happy ↔ Surprise:** มีการสับสนสูงสุด (15% และ 18%) เพราะทั้งสองอารมณ์มี Pitch สูงและ Energy สูง แต่รูปแบบต่างกันระหว่างภาษา
-- **Sad ↔ Neutral:** สับสนกัน 12-15% เพราะทั้งคู่มี Pitch ต่ำ แต่รูปแบบ Vowel Duration ต่างกันตามภาษา
-- **Angry:** ค่อนข้างดี (72%) เพราะ Energy สูงมากเป็น Feature ที่โดดเด่นในทุกภาษา
+**ตารางที่ 4.2 เปรียบเทียบ Accuracy ระหว่าง ResNet และ Classical ML**
 
-## 4.3 การวิเคราะห์สาเหตุที่ทำให้ไม่บรรลุเป้าหมาย
+| ภาษา | SVM | Random Forest | Gradient Boosting | ResNet | ผลที่ดีที่สุด |
+|---|---|---|---|---|---|
+| Chinese | 81.8% | 66.7% | 68.6% | **86.6%** | ResNet ✅ |
+| Japanese | 75.3% | 66.7% | 65.0% | **84.4%** | ResNet ✅ |
+| Korean | **72.6%** | 61.9% | 54.8% | 53.6% | SVM ✅ |
+| Thai | 63.9% | 58.0% | 58.6% | **88.4%** | ResNet ✅ |
+| English | 50.8% | 56.8% | 55.8% | **82.8%** | ResNet ✅ |
 
-### 4.3.1 สาเหตุหลัก: Prosody Mismatch
+**การวิเคราะห์:**
+- **ResNet ชนะ 4/5 ภาษา** ด้วยส่วนต่างที่ชัดเจน (Thai: +24.5%, Chinese: +4.8%, Japanese: +9.1%, English: +26.0%)
+- **Korean เป็นข้อยกเว้น** — SVM (72.6%) ชนะ ResNet (53.6%) เนื่องจากมีข้อมูลเพียง ~420 ตัวอย่าง เมื่อมีข้อมูลน้อยกว่า 1,000 ตัวอย่างต่อ Class Classical ML มักให้ผลดีกว่า Deep Learning
 
-เมื่อวิเคราะห์เชิงลึก พบว่าสาเหตุหลักที่ทำให้โครงงานไม่บรรลุเป้าหมายคือ **ความแตกต่างของ Prosody ระหว่างภาษาอังกฤษและภาษาเกาหลี** ซึ่งทำให้ MFCC ที่สกัดออกมามีการผสมระหว่าง "สัญญาณอารมณ์" กับ "สัญญาณภาษา":
+### 4.2.3 วิเคราะห์ Korean — กรณีพิเศษ
 
-```
-MFCC ที่โมเดลเห็น = ลักษณะอารมณ์  +  ลักษณะภาษา  +  ลักษณะผู้พูด
-                      (ต้องการ)        (Noise)         (Noise)
-```
+&emsp;ภาษาเกาหลีมีจำนวนข้อมูลน้อยมากเมื่อเทียบกับภาษาอื่น (Test set เพียง 84 ตัวอย่าง, ข้อมูลทั้งหมด ~420 ตัวอย่าง) ทำให้ ResNet ซึ่งมี ~2.3 ล้าน Parameter ต้องเรียนรู้จากข้อมูลน้อยเกินไป ส่งผลให้ Overfit
 
-**ตัวอย่างเฉพาะ:** เมื่อโมเดลเห็นเสียงภาษาเกาหลีที่ Pitch ต่ำกว่าค่าเฉลี่ย อาจตีความว่าเป็นอารมณ์ "เศร้า" ทั้งที่จริงแล้วเป็นลักษณะ Pitch ปกติของภาษาเกาหลีในอารมณ์ "เป็นกลาง"
+&emsp;สำหรับ Korean จึงแนะนำให้ใช้ **Korean SVM Classifier (72.62%)** แทน ResNet ในการ Production ซึ่งเป็นการตัดสินใจตาม Empirical Evidence ไม่ใช่ทฤษฎี ข้อค้นพบนี้สอดคล้องกับหลักการ **"No Free Lunch" ของ Machine Learning** ที่ระบุว่าไม่มีอัลกอริทึมที่ดีที่สุดสำหรับทุกสถานการณ์
 
-### 4.3.2 สาเหตุรอง: Data Imbalance
+**ตารางที่ 4.3 เปรียบเทียบโมเดลสำหรับ Korean**
 
-ภาษาอังกฤษ (RAVDESS) มีข้อมูลที่มีคุณภาพสูงและจำนวนมากกว่าภาษาเกาหลี ทำให้โมเดลเรียนรู้ Bias ไปทางภาษาอังกฤษ:
-- โมเดลทำงานได้ดีกับเสียงภาษาอังกฤษ
-- โมเดลทำงานได้ต่ำกว่ามากกับเสียงภาษาเกาหลี
+| โมเดล | Accuracy | F1-Macro | สาเหตุ |
+|---|---|---|---|
+| SVM (RBF) | **72.62%** | 0.58 | เหมาะกับข้อมูลน้อย, Decision Boundary ชัด |
+| ResNet | 53.57% | 0.48 | Overfit เพราะ Parameter มากเกินข้อมูล |
+| Wav2Vec2-MLP | ~39.76% | — | Pre-trained features ไม่ match Korean data น้อย |
 
-### 4.3.3 สาเหตุที่สาม: Feature Entanglement
+## 4.3 การวิเคราะห์ผลลัพธ์รายอารมณ์
 
-MFCC ไม่มีกลไกในการแยก "Language Features" ออกจาก "Emotion Features" Feature ทั้งหมดถูกส่งเข้าโมเดลโดยตรงโดยไม่มีการ Disentangle
+### 4.3.1 Thai (88.40%) — ผลดีที่สุด
 
-**ตารางที่ 4.3 สรุปข้อจำกัดของแนวทาง Multilingual Unified Model**
+&emsp;ภาษาไทยให้ผลดีที่สุดเพราะมีข้อมูลมากที่สุด (~30,210 ตัวอย่าง) ทำให้ ResNet เรียนรู้ได้ดีมาก อารมณ์ทั้ง 4 ที่มีใน Dataset ได้แก่ Angry, Happy, Neutral, Sad มีความแตกต่างของ Mel Spectrogram Pattern ที่ชัดเจน
 
-| ข้อจำกัด | สาเหตุ | ผลกระทบ |
-|---|---|---|
-| Prosody Mismatch | แต่ละภาษามี Pitch, Rhythm, Energy Pattern ต่างกัน | โมเดลสับสนระหว่างลักษณะภาษากับลักษณะอารมณ์ |
-| Data Imbalance | RAVDESS มีข้อมูลมากกว่า Korean Dataset | โมเดล Bias ไปทางภาษาอังกฤษ |
-| Feature Entanglement | MFCC ผสมทั้ง Emotion และ Language Features | แยกไม่ออกว่า Pitch สูงเพราะโกรธหรือเพราะภาษา |
-| Cultural Difference | การแสดงอารมณ์ในวัฒนธรรมตะวันออก ≠ ตะวันตก | ระดับความเข้มข้นของอารมณ์ที่แสดงออกต่างกัน |
-| Single Scaler Problem | StandardScaler Fit บน Mixed Language Data | สเกลที่ได้ไม่เหมาะกับทั้งสองภาษา |
+### 4.3.2 English (82.84%) — 7 อารมณ์
+
+&emsp;ภาษาอังกฤษมีอารมณ์มากที่สุด 7 ประเภท จาก RAVDESS+CREMA-D รวม ~11,425 ตัวอย่าง ทั้ง Disgust และ Fear ซึ่งเป็นอารมณ์ที่ยากได้ F1-Score ต่ำกว่า (0.65 สำหรับ Fear) ขณะที่ Happy และ Neutral ได้สูงกว่า (0.87-0.90)
+
+### 4.3.3 ข้อค้นพบสำคัญจาก Cross-lingual Analysis
+
+&emsp;การวิเคราะห์ Mel Spectrogram Feature Space ข้ามภาษาพบว่า:
+- อารมณ์ **Angry** มีความคล้ายกันสูงข้ามภาษา (High-energy, broadband pattern)
+- อารมณ์ **Neutral** แตกต่างกันมากข้ามภาษา (ขึ้นกับ baseline prosody ของแต่ละภาษา)
+- **Within-language distance** (ความแตกต่างระหว่างอารมณ์ในภาษาเดียว) น้อยกว่า **Between-language distance** สำหรับอารมณ์เดียวกัน ซึ่งเป็นหลักฐานเชิงประจักษ์ที่สนับสนุนแนวทาง Per-Language Model
 
 ---
 
@@ -842,167 +1008,151 @@ MFCC ไม่มีกลไกในการแยก "Language Features" อ
 
 ## 5.1 สรุปผลการดำเนินงาน
 
-โครงงานนี้ได้ทดลองพัฒนาระบบ Multilingual SER โดยมีแนวคิดหลักคือการรวมข้อมูลเสียงพูดจากหลายภาษาในชุดข้อมูลเดียว และฝึกสอนโมเดล CNN + Bidirectional LSTM เดียวให้จำแนกอารมณ์ข้ามภาษาได้
+&emsp;โครงงานนี้พัฒนา **ระบบรู้จำอารมณ์จากเสียงพูดแบบรองรับหลายภาษา** โดยใช้สถาปัตยกรรม **Per-Language ResNet** ที่แก้ปัญหา Prosody Mismatch ซึ่งเป็นข้อจำกัดพื้นฐานของแนวทาง Unified Multilingual Model ระบบรองรับ 5 ภาษา ได้แก่ ไทย จีน ญี่ปุ่น เกาหลี และอังกฤษ โดยมี Language Detector SVM ที่แม่นยำ 98.54% เป็นตัวคัดเลือกโมเดล
 
-**สิ่งที่ทำสำเร็จ:**
+**ผลการดำเนินงานในแต่ละด้าน:**
 
-| ลำดับ | รายการ | สถานะ |
-|---|---|---|
-| 1 | พัฒนา Pipeline สกัด Feature (MFCC / Mel Spectrogram) | ✅ สำเร็จ |
-| 2 | ระบบ Data Augmentation (Noise, Pitch, Time Stretch) | ✅ สำเร็จ |
-| 3 | ป้องกัน Data Leakage อย่างเคร่งครัด | ✅ สำเร็จ |
-| 4 | Train โมเดล CNN + Bi-LSTM หลายรูปแบบ | ✅ สำเร็จ |
-| 5 | ระบบ Interactive Testing พร้อม Confidence Score | ✅ สำเร็จ |
-| 6 | บรรลุ Test Accuracy ≥ 75% บน Multilingual Data | ❌ ไม่สำเร็จ (~68%) |
+&emsp;**ด้าน Data Pipeline** — สำเร็จสมบูรณ์ ระบบสกัด Mel Spectrogram (128×130) จากไฟล์เสียง 16kHz แบบอัตโนมัติ รองรับ Dataset หลายรูปแบบ พร้อม Anti-Data-Leakage Split และ SpecAugment + Audio Augmentation
 
-**สาเหตุที่ไม่บรรลุเป้าหมาย:**
-> เสียงพูดของแต่ละภาษามีลักษณะทาง Prosody (น้ำเสียง จังหวะ ระดับเสียง) ที่แตกต่างกันอย่างมีนัยสำคัญ แม้จะแสดงออกถึงอารมณ์เดียวกัน ทำให้โมเดล Unified Model ไม่สามารถแยก "ลักษณะของอารมณ์" ออกจาก "ลักษณะของภาษา" ได้อย่างมีประสิทธิภาพ
+&emsp;**ด้าน Language Detection** — สร้าง SVM Pipeline ที่ระบุภาษาจาก Mel Spectrogram ได้ **98.54% Accuracy** บน 5 ภาษา โดยใช้ StandardScaler → PCA(80) → SVM(RBF) เป็น Lightweight Classifier ที่ไม่ต้องการ GPU
+
+&emsp;**ด้านโมเดล Per-Language ResNet** — สร้างโมเดล EmotionResNet แยกสำหรับแต่ละภาษาสำเร็จ โมเดลมี ~2.3M Parameter ต่อภาษา และให้ผลดีสำหรับ 4/5 ภาษา
+
+&emsp;**ด้านเป้าหมาย Test Accuracy** — **บรรลุเป้าหมาย** ค่าเฉลี่ย Test Accuracy = **79.16%** สูงกว่าเป้าหมาย 75% ที่กำหนดไว้
+
+**ตารางที่ 5.0 สรุปผลการประเมินครบทุกภาษา**
+
+| ภาษา | Dataset | Test Samples | Accuracy | สถานะ |
+|---|---|---|---|---|
+| Thai | TDED | 6,042 | **88.40%** | ✅ บรรลุ |
+| Chinese | Chinese Emotion Corpus | 538 | **86.62%** | ✅ บรรลุ |
+| Japan | JANON | 243 | **84.36%** | ✅ บรรลุ |
+| English | RAVDESS + CREMA-D | 2,285 | **82.84%** | ✅ บรรลุ |
+| Korean (ResNet) | hi_kia | 84 | 53.57% | ⚠️ ข้อมูลน้อย |
+| Korean (SVM) | hi_kia | 84 | **72.62%** | ✅ ใช้ SVM แทน |
+| Language Detector | All 5 languages | — | **98.54%** | ✅ บรรลุ |
+| **เฉลี่ย (ResNet)** | | | **79.16%** | ✅ > 75% |
+
+---
+
+**ผลการ Training โดยละเอียด:**
+
+ 
+
+ 
+
+**สรุปภาพรวม:**
+
+&emsp;โครงงานนี้ประสบความสำเร็จในการพัฒนาระบบ Per-Language ResNet ที่แก้ปัญหา Prosody Mismatch ได้อย่างมีประสิทธิภาพ ด้วยค่าเฉลี่ย 79.16% ซึ่งสูงกว่าเป้าหมาย 75% ข้อค้นพบสำคัญที่มีคุณค่าทางวิชาการได้แก่ การพิสูจน์เชิงประจักษ์ว่า Per-Language Model ให้ผลดีกว่า Unified Model อย่างมีนัยสำคัญ และการค้นพบว่าสำหรับภาษาที่มีข้อมูลน้อย (<1,000 ตัวอย่าง) Classical ML (SVM) ให้ผลดีกว่า Deep Learning (ResNet) ซึ่งสอดคล้องกับหลักการ Bias-Variance Tradeoff
 
 ## 5.2 ปัญหาและอุปสรรคที่พบในการดำเนินงาน
 
-| ปัญหา | รายละเอียด | วิธีที่พยายามแก้ไข |
-|---|---|---|
-| **Prosody Mismatch** | MFCC ของแต่ละภาษาแตกต่างกันแม้อารมณ์เหมือนกัน | ทดลอง Data Augmentation หลายรูปแบบ แต่ไม่เพียงพอ |
-| **Scaler Mismatch** | StandardScaler ที่ Fit บน Mixed Data ไม่เหมาะกับทั้งสองภาษา | พัฒนา Repair_Scaler.py เพื่อสร้าง Scaler ย้อนหลัง |
-| **Data Imbalance** | RAVDESS มีข้อมูลมากกว่า Korean Dataset | ใช้ stratify ตอน Split เพื่อรักษาสัดส่วน |
-| **VRAM Overflow** | โมเดล High-Resolution ใช้ VRAM เกิน RTX 3060 (12GB) | สร้าง Low-VRAM Version (Batch=16, Mixed Precision) |
-| **Korean Dataset Noise** | บางไฟล์ใน Korean Dataset มี Noise สูง | ใช้ `librosa.effects.trim(top_db=25)` ตัดความเงียบ |
+&emsp;ตลอดระยะเวลาการพัฒนาโครงงาน พบปัญหาและอุปสรรคหลายประการที่ต้องวิเคราะห์และแก้ไขอย่างเป็นระบบ รายละเอียดของแต่ละปัญหามีดังนี้
 
-## 5.3 Future of Work — แนวทางการพัฒนาในอนาคต: แยกโมเดลตามภาษา
+---
 
-> **หมายเหตุ:** ส่วนนี้เป็น Future of Work ที่เสนอแนวทางแก้ไขปัญหา Prosody Mismatch สำหรับการพัฒนาต่อยอดในอนาคต ยังไม่ได้ดำเนินการในโครงงานนี้
+**ปัญหาที่ 1 — Korean Data Scarcity: ข้อมูลภาษาเกาหลีน้อยเกินไปสำหรับ Deep Learning**
 
-### 5.3.1 แนวคิดหลัก: Per-Language Model Architecture
+&emsp;ภาษาเกาหลีมีข้อมูลเพียง ~420 ตัวอย่าง (5 classes, ~84/class) ซึ่งไม่เพียงพอสำหรับ ResNet ที่มี ~2.3M Parameter ส่งผลให้ Overfit รุนแรง ResNet ทำได้เพียง 53.57% ในขณะที่ SVM ซึ่งมี Inductive Bias ที่ดีกว่าสำหรับข้อมูลน้อยได้ถึง 72.62%
 
-**ปัญหาของ Unified Model:** โมเดลเดียวต้องเรียนรู้ทั้ง Emotion Pattern และ Language Pattern พร้อมกัน ทำให้เกิดความสับสน
+&emsp;วิธีแก้ที่ใช้: สร้าง Audio Augmentation (Pitch Shift ±1/±2 semitones, Time Stretch 0.85/1.15, Gaussian Noise) เพื่อเพิ่มข้อมูล อย่างไรก็ตามพบว่า Augmentation ทำให้ Accuracy แย่ลง (28% < 38%) เนื่องจากไฟล์ hi_kia มีความยาวเพียง 0.4-1.0 วินาที Augmented versions จึงแทบเหมือนต้นฉบับและเพิ่มเฉพาะ Noise ข้อสรุปสุดท้ายคือใช้ Original 556 files โดยไม่ Augment และเลือก SVM เป็นโมเดลสำหรับ Korean
 
-**แนวทางแก้ไข:** ฝึกสอนโมเดลแยกสำหรับแต่ละภาษา แล้วใช้ **Language Identifier** คัดเลือกโมเดลที่เหมาะสมก่อนทำนายอารมณ์
+---
 
-```
-แนวทาง Unified Model (ปัจจุบัน — ไม่สำเร็จ):
-   [Audio EN] ──────────────────────────► [Single Model] → Emotion
-   [Audio KO] ──────────────────────────►
+**ปัญหาที่ 2 — HuggingFace Repository 404: Download Script ล้มเหลว**
 
-แนวทาง Per-Language Model (Future of Work — เสนอแนะ):
-   [Audio Input]
-         │
-         ▼
-   [Language Identifier]
-         │
-         ├─── ภาษาอังกฤษ ──► [EN Emotion Model (ฝึกด้วย RAVDESS)] ──► Emotion
-         │
-         ├─── ภาษาเกาหลี  ──► [KO Emotion Model (ฝึกด้วย Korean Data)] ──► Emotion
-         │
-         ├─── ภาษาไทย     ──► [TH Emotion Model (ฝึกด้วย Thai Data)] ──► Emotion
-         │
-         └─── ภาษาอื่นๆ   ──► [Universal Fallback Model] ──► Emotion
-```
+&emsp;`download_extra_data.py` เดิมใช้ Hardcoded Repository Names ที่ไม่มีอยู่จริงใน Hugging Face Hub ทำให้ดาวน์โหลดข้อมูลเพิ่มเติมไม่ได้เลย
 
-### 5.3.2 ส่วนประกอบของระบบ Per-Language Model
+&emsp;วิธีแก้: เปลี่ยนเป็นสองกลยุทธ์ คือ (1) ค้นหา Dataset จาก Hugging Face Hub API แบบ Dynamic และ (2) Audio Augmentation Fallback ที่รับประกันว่าจะสร้างข้อมูลได้เสมอ
 
-**ส่วนที่ 1 — Language Identifier:**
-ระบบระบุภาษาอัตโนมัติก่อนส่งต่อไปยังโมเดลที่เหมาะสม
+---
 
-| เทคโนโลยีที่พิจารณา | ข้อดี | ข้อเสีย |
-|---|---|---|
-| **WhisperX (OpenAI)** | แม่นยำสูง รองรับหลายภาษา | ต้องการ Compute มาก |
-| **langdetect (Google)** | เบา ใช้งานง่าย | ต้องมีเนื้อหาในเสียงก่อน |
-| **VoiceLang Classifier** | ออกแบบมาสำหรับเสียงโดยเฉพาะ | Dataset น้อย |
-| **Acoustic Language ID** | ทำงานบน Audio โดยตรง | ต้องพัฒนาเอง |
+**ปัญหาที่ 3 — Wav2Vec2Processor TypeError: ใช้ Class ผิด**
 
-**ส่วนที่ 2 — Per-Language Emotion Models:**
+&emsp;`facebook/wav2vec2-large-xlsr-53` ไม่มี `vocab.json` ทำให้ `Wav2Vec2Processor.from_pretrained()` ล้มเหลวด้วย TypeError: expected str not NoneType
 
-| โมเดล | ฝึกด้วย Dataset | สถาปัตยกรรม | Target Accuracy |
+&emsp;วิธีแก้: ใช้ `Wav2Vec2FeatureExtractor` แทน `Wav2Vec2Processor` เพราะ FeatureExtractor ไม่ต้องการ vocab.json
+
+---
+
+**ปัญหาที่ 4 — torchaudio Version Mismatch**
+
+&emsp;`torchaudio 2.11.0` ไม่ Compatible กับ PyTorch 2.6.0 ทำให้ Import Error ทันทีที่โหลด
+
+&emsp;วิธีแก้: ติดตั้ง `torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124` ให้ตรงกับ CUDA version
+
+---
+
+**ปัญหาที่ 5 — Web Demo Runtime Errors**
+
+&emsp;Web Demo มีสองปัญหาหลัก: (1) `RuntimeError: Missing key fc.*` เพราะ Architecture ใน `web_demo.py` ใช้ `self.fc` แต่โมเดลที่บันทึกไว้ใช้ `self.classifier` (2) `TypeError: Audio.__init__() show_download_button` เพราะ Gradio 6.x ลบ parameter นี้ออก
+
+&emsp;วิธีแก้: (1) Align Architecture ให้ตรงกัน โดยใช้ `self.classifier` และ `256*4*4` (2) ลบ `show_download_button=True` ออกจาก `gr.Audio()`
+
+---
+
+**ปัญหาที่ 6 — Japan Dataset ไม่มีไฟล์เสียง RAW**
+
+&emsp;`dataset/Japan/` มีเฉพาะ `.npy` Mel Spectrogram Features ไม่มีไฟล์ `.wav`/`.mp3` ดั้งเดิม ทำให้ไม่สามารถรัน Wav2Vec2 Feature Extraction หรือ Audio Augmentation สำหรับ Japanese ได้
+
+&emsp;ผลลัพธ์: ข้าม Wav2Vec2 สำหรับ Japanese, โมเดล ResNet ที่ฝึกด้วย Original Features ได้ 84.36% ซึ่งดีพอ
+
+---
+
+**สรุปปัญหาทั้งหมด:**
+
+| ปัญหา | ระดับผลกระทบ | วิธีแก้ที่ใช้ | ประสิทธิภาพ |
 |---|---|---|---|
-| EN Emotion Model | RAVDESS + CREMA-D | CNN + Bi-LSTM | ≥ 85% |
-| KO Emotion Model | Korean VED + KEMDy | CNN + Bi-LSTM | ≥ 80% |
-| TH Emotion Model | Thai ESD (ต้องร���บรวม) | CNN + Bi-LSTM | ≥ 75% |
-| Universal Fallback | RAVDESS + Korean | CNN + Bi-LSTM | ≥ 70% |
+| Korean Data Scarcity | สูง (ResNet 53% < SVM 73%) | ใช้ SVM แทน ResNet สำหรับ Korean | ✅ แก้ได้ด้วย Model Selection |
+| HuggingFace 404 | ปานกลาง | API Search + Augmentation Fallback | ✅ แก้ได้สมบูรณ์ |
+| Wav2Vec2Processor TypeError | สูง | ใช้ Wav2Vec2FeatureExtractor แทน | ✅ แก้ได้สมบูรณ์ |
+| torchaudio Mismatch | สูง | ติดตั้งเวอร์ชันที่ตรงกัน | ✅ แก้ได้สมบูรณ์ |
+| Web Demo Architecture Mismatch | ปานกลาง | Align `self.classifier` + `256*4*4` | ✅ แก้ได้สมบูรณ์ |
+| Japan ไม่มี Raw Audio | ต่ำ | ข้าม Wav2Vec2 สำหรับ Japanese | ✅ ไม่กระทบผลหลัก |
 
-**ส่วนที่ 3 — Ensemble / Confidence Routing:**
+---
+
+## 5.3 แนวทางการพัฒนาในอนาคต
+
+&emsp;ระบบ Per-Language ResNet ที่พัฒนาแล้วเสร็จในโครงงานนี้ถือเป็นจุดเริ่มต้นที่มั่นคงสำหรับการพัฒนาต่อยอด แนวทางที่น่าสนใจในอนาคตมีดังนี้
+
+### 5.3.1 เพิ่มข้อมูลภาษาเกาหลีและญี่ปุ่น
+
+&emsp;ปัญหาหลักของ Korean คือ Dataset ขนาดเล็ก (~420 ตัวอย่าง) ทำให้ ResNet Overfit อย่างรุนแรง หากสามารถรวบรวมข้อมูลให้ได้ ≥ 1,000 ตัวอย่างต่ออารมณ์โดยอาจใช้ KEMDy หรือบันทึกเสียงเพิ่มเติม ResNet จะสามารถแซงหน้า SVM ได้ตามที่ No Free Lunch Theorem คาดการณ์ไว้ สำหรับ Japanese, JANON มีเพียง ~1,215 ตัวอย่าง การเพิ่มจาก JNV (Japanese Natural Voice) หรือ JTES จะช่วยเพิ่ม Accuracy ได้อีก
+
+### 5.3.2 Ensemble Method สำหรับ Low-Resource Languages
+
+&emsp;แทนที่จะเลือก ResNet หรือ SVM อย่างใดอย่างหนึ่งสำหรับ Korean Ensemble Method ที่รวม Prediction ของทั้งสองโมเดลด้วย Confidence-Weighted Voting อาจให้ผลดีกว่าโมเดลเดี่ยว:
 
 ```python
-# Pseudo-code ของระบบ Per-Language Routing
-
-def predict_emotion(audio_file):
-    # ขั้นตอนที่ 1: ระบุภาษา
-    language, lang_confidence = language_identifier.predict(audio_file)
-
-    # ขั้นตอนที่ 2: เลือกโมเดลที่เหมาะสม
-    if lang_confidence >= 0.85:
-        if language == "en":
-            model = en_emotion_model
-        elif language == "ko":
-            model = ko_emotion_model
-        elif language == "th":
-            model = th_emotion_model
-    else:
-        # ความมั่นใจในการระบุภาษาต่ำ → ใช้ Universal Fallback
-        model = universal_fallback_model
-
-    # ขั้นตอนที่ 3: ทำนายอารมณ์
-    features = extract_features(audio_file)
-    emotion, emotion_confidence = model.predict(features)
-
-    return emotion, emotion_confidence, language
+resnet_prob = resnet_model.predict_proba(mel_features)   # shape: (n_classes,)
+svm_prob    = svm_model.predict_proba(mfcc_features)     # shape: (n_classes,)
+ensemble    = 0.4 * resnet_prob + 0.6 * svm_prob
+emotion     = classes[ensemble.argmax()]
 ```
 
-### 5.3.3 ข้อดีของแนวทาง Per-Language Model
+### 5.3.3 ขยายระบบไปยังภาษาอื่น
 
-**ตารางที่ 5.2 เปรียบเทียบแนวทาง Unified Model กับ Per-Language Model**
+&emsp;สถาปัตยกรรม Per-Language แบบ Modular รองรับการเพิ่มภาษาใหม่โดยไม่กระทบโมเดลที่มีอยู่ ภาษาที่น่าเพิ่มและมี Public Dataset พร้อมใช้ ได้แก่
 
-| หัวข้อ | Unified Model (ปัจจุบัน) | Per-Language Model (Future) |
+| ภาษา | Dataset | ตัวอย่าง (โดยประมาณ) |
 |---|---|---|
-| **Accuracy** | ~68% (Multilingual Mix) | คาดว่า ~85% per language |
-| **Prosody Handling** | ผสมทุกภาษา → สับสน | แยกภาษา → เรียนรู้ได้ถูกต้อง |
-| **การขยาย** | ต้อง Retrain ทั้งหมดเมื่อเพิ่มภาษา | เพิ่มโมเดลใหม่โดยไม่กระทบเดิม |
-| **ความซับซ้อน** | น้อย (โมเดลเดียว) | มากขึ้น (หลายโมเดล + Router) |
-| **ข้อมูลที่ต้องการ** | รวมกันได้ | ต้องการ Dataset แยกภาษา |
-| **การ Maintain** | ง่าย | ต้อง Update ทีละโมเดล |
+| Arabic | AESDD | ~500 |
+| German | Emodb | ~535 |
+| French | ADAS | ~900 |
+| Hindi | IEMOCAP-Hindi | ~1,000+ |
 
-### 5.3.4 แผนการพัฒนาในอนาคต
+### 5.3.4 Fine-tune Wav2Vec2 สำหรับ Emotion Recognition
 
-**ตารางที่ 5.1 แผนพัฒนา Per-Language Model**
+&emsp;ขั้นตอน Wav2Vec2 ในโครงงานนี้ดึง Embedding แบบ Zero-shot โดยไม่ได้ Fine-tune เพิ่ม การ Fine-tune `facebook/wav2vec2-large-xlsr-53` บน Emotion Dataset โดยตรงจะสร้าง Representation ที่เหมาะกับ Emotion Feature มากกว่า และอาจช่วยภาษาที่มีข้อมูลน้อยเช่น Korean ได้อย่างมีนัยสำคัญ เนื่องจาก XLS-R ถูก Pre-train บนเสียง 128 ภาษาและมี Cross-lingual Transfer ที่ดี
 
-| ระยะ | งาน | เป้าหมาย | ความท้าทาย |
-|---|---|---|---|
-| **Phase 1** | รวบรวม Dataset ภาษาเกาหลีเพิ่ม (KEMDy) | ≥ 5,000 ตัวอย่างต่ออารมณ์ | Dataset มี License จำกัด |
-| **Phase 2** | Train EN Model แยก (RAVDESS only) | EN Accuracy ≥ 85% | — |
-| **Phase 3** | Train KO Model แยก (Korean data only) | KO Accuracy ≥ 80% | ขาด Dataset |
-| **Phase 4** | พัฒนา Language Identifier | Lang ID Accuracy ≥ 95% | ต้องการ Audio Language Dataset |
-| **Phase 5** | รวม Router + Models เข้าด้วยกัน | End-to-end System | Latency ที่เพิ่มขึ้น |
-| **Phase 6** | ทดสอบ Real-world + ปรับปรุง | Overall Accuracy ≥ 80% | Edge Cases ข้ามภาษา |
+### 5.3.5 ระบบทำงานแบบ Real-time Streaming
 
-### 5.3.5 แนวทางแก้ไขเชิงลึกสำหรับ Feature Level
+&emsp;ระบบปัจจุบันประมวลผลไฟล์เสียงที่บันทึกไว้ทั้งไฟล์ การพัฒนาให้รองรับ Streaming Input จาก Microphone แบบ Real-time โดยใช้ Sliding Window (เช่น 2 วินาที Step 0.5 วินาที) จะขยายขอบเขตการใช้งานไปยัง Call Center Monitoring, Live Presentation Feedback และ Interactive Entertainment
 
-นอกจากการแยกโมเดลตามภาษา ยังมีแนวทางเพิ่มเติมที่อาจช่วยแก้ปัญหา Prosody Mismatch ได้:
+### 5.3.6 Deployment บน Mobile และ Edge Devices
 
-**1. Language-Neutral Features (Wav2Vec 2.0 / HuBERT):**
-แทนที่จะใช้ MFCC ซึ่งแยก Language Feature ออกไม่ได้ ใช้ Pre-trained Speech Representation Model ที่เรียนรู้ Feature เชิงความหมายมากกว่า
-
-```
-MFCC → สะท้อน Acoustic Properties (ได้รับอิทธิพลจากภาษาสูง)
-Wav2Vec 2.0 → สะท้อน Semantic Speech Patterns (Language-neutral มากกว่า)
-```
-
-**2. Adversarial Training — Language-Invariant Representation:**
-ฝึกโมเดลให้เรียนรู้ Feature ที่ทำนายอารมณ์ได้ แต่ทำนายภาษาไม่ได้ โดยใช้ Adversarial Loss:
-
-```
-Loss = Emotion_Classification_Loss - λ × Language_Classification_Loss
-```
-
-โมเดลจะถูกบังคับให้สร้าง Representation ที่ไม่มีข้อมูลเกี่ยวกับภาษา
-
-**3. Domain Adaptation (Fine-tuning):**
-เริ่มจากโมเดลที่ฝึกบนภาษาหนึ่ง แล้ว Fine-tune ด้วยข้อมูลอีกภาษาหนึ่ง ซึ่งต้องการข้อมูลน้อยกว่าการ Train ใหม่ทั้งหมด
-
-### 5.3.6 ความท้าทายที่ต้องแก้ไขก่อน
-
-1. **Dataset Availability:** ข้อมูลเสียงอารมณ์ที่มี Label ถูกต้องสำหรับภาษาเกาหลีและภาษาไทยยังมีน้อยมากและหลายชุดมี License จำกัด
-2. **Language Identifier Accuracy:** หาก Language Identifier ระบุภาษาผิด จะทำให้ส่งเสียงไปยังโมเดลผิดตัว Accuracy จะลดลงมาก
-3. **Latency:** การใช้หลายโมเดลทำให้ Response Time เพิ่มขึ้น ต้องพิจารณา Trade-off ระหว่าง Accuracy กับ Speed
-4. **Code-switching:** ผู้พูดบางคนสลับภาษากลางประโยค ซึ่งระบบปัจจุบันยังไม่รองรับ
+&emsp;ResNet ที่ใช้มี ~2.35M Parameter ซึ่งหนักเกินไปสำหรับอุปกรณ์ Mobile การใช้ Model Compression เช่น Knowledge Distillation (ถ่ายความรู้ไปยัง Model ขนาดเล็กกว่า), Weight Pruning และ Quantization (ลด Precision เป็น INT8) จะลดขนาดโมเดลให้เหมาะสำหรับ Mobile App หรือ Embedded System
 
 ---
 
@@ -1010,118 +1160,29 @@ Loss = Emotion_Classification_Loss - λ × Language_Classification_Loss
 
 1. Ekman, P. (1992). *An argument for basic emotions.* Cognition & Emotion, 6(3–4), 169–200.
 
-2. Davis, S. B., & Mermelstein, P. (1980). *Comparison of parametric representations for monosyllabic word recognition in continuously spoken sentences.* IEEE Transactions on Acoustics, Speech, and Signal Processing, 28(4), 357–366.
+2. He, K., Zhang, X., Ren, S., & Sun, J. (2016). *Deep residual learning for image recognition.* Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 770–778.
 
-3. Hochreiter, S., & Schmidhuber, J. (1997). *Long short-term memory.* Neural Computation, 9(8), 1735–1780.
+3. Livingstone, S. R., & Russo, F. A. (2018). *The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English.* PLOS ONE, 13(5), e0196391.
 
-4. Zhao, J., Mao, X., & Chen, L. (2019). *Speech emotion recognition using deep 1D & 2D CNN LSTM networks.* Biomedical Signal Processing and Control, 47, 312–323.
+4. Cao, H., Cooper, D. G., Kuchinsky, M. K., Ding, H., Bhanu, B., & Bhanu, B. (2014). *CREMA-D: Crowd-sourced emotional multimodal actors dataset.* IEEE Transactions on Affective Computing, 5(4), 377–390.
 
-5. Livingstone, S. R., & Russo, F. A. (2018). *The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English.* PLOS ONE, 13(5), e0196391.
+5. Baevski, A., Zhou, Y., Mohamed, A., & Auli, M. (2020). *wav2vec 2.0: A framework for self-supervised learning of speech representations.* Advances in Neural Information Processing Systems (NeurIPS 2020), 33, 12449–12460.
 
-6. Schuller, B., Vlasenko, B., Eyben, F., Wöllmer, M., Stuhlsatz, A., Wendemuth, A., & Rigoll, G. (2010). *Cross-corpus acoustic emotion recognition: Variances and strategies.* IEEE Transactions on Affective Computing, 1(2), 119–131.
+6. Park, D. S., Chan, W., Zhang, Y., Chiu, C. C., Zoph, B., Cubuk, E. D., & Le, Q. V. (2019). *SpecAugment: A simple data augmentation method for automatic speech recognition.* Interspeech 2019, 2613–2617.
 
-7. Lian, Z., Liu, B., & Tao, J. (2021). *CTNet: Conversational emotion recognition using seq2seq multi-task learning.* IEEE/ACM Transactions on Audio, Speech, and Language Processing, 29, 1–13.
+7. Schuller, B., Vlasenko, B., Eyben, F., Wöllmer, M., Stuhlsatz, A., Wendemuth, A., & Rigoll, G. (2010). *Cross-corpus acoustic emotion recognition: Variances and strategies.* IEEE Transactions on Affective Computing, 1(2), 119–131.
 
 8. McFee, B., Raffel, C., Liang, D., Ellis, D., McVicar, M., Battenberg, E., & Nieto, O. (2015). *librosa: Audio and music signal analysis in python.* Proceedings of the 14th Python in Science Conference (SciPy 2015), 18–25.
 
-9. Abadi, M., Barham, P., Chen, J., Chen, Z., Davis, A., Dean, J., ... & Zheng, X. (2016). *TensorFlow: A system for large-scale machine learning.* 12th USENIX Symposium on Operating Systems Design and Implementation (OSDI 16), 265–283.
+9. Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., ... & Chintala, S. (2019). *PyTorch: An imperative style, high-performance deep learning library.* Advances in Neural Information Processing Systems (NeurIPS 2019), 32, 8026–8037.
 
 10. Kingma, D. P., & Ba, J. (2014). *Adam: A method for stochastic optimization.* arXiv preprint arXiv:1412.6980.
 
-11. Schuster, M., & Paliwal, K. K. (1997). *Bidirectional recurrent neural networks.* IEEE Transactions on Signal Processing, 45(11), 2673–2681.
+11. Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). *Dropout: A simple way to prevent neural networks from overfitting.* The Journal of Machine Learning Research, 15(1), 1929–1958.
 
-12. Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). *Dropout: A simple way to prevent neural networks from overfitting.* The Journal of Machine Learning Research, 15(1), 1929–1958.
+12. Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). *Scikit-learn: Machine learning in Python.* Journal of Machine Learning Research, 12, 2825–2830.
 
-13. Baevski, A., Zhou, Y., Mohamed, A., & Auli, M. (2020). *wav2vec 2.0: A framework for self-supervised learning of speech representations.* Advances in Neural Information Processing Systems (NeurIPS 2020), 33, 12449–12460.
-
-14. Hsu, W. N., Bolte, B., Tsai, Y. H. H., Lakhotia, K., Salakhutdinov, R., & Mohamed, A. (2021). *HuBERT: Self-supervised speech representation learning by masked prediction of hidden units.* IEEE/ACM Transactions on Audio, Speech, and Language Processing, 29, 3451–3460.
-
----
-
-## ภาคผนวก ก: Model Summary (ฉบับสมบูรณ์)
-
-```
-Model: "sequential"
-┌─────────────────────────────────────────────────────────┐
-│ Layer (type)              Output Shape        Param #   │
-├─────────────────────────────────────────────────────────┤
-│ conv1d (Conv1D)           (None, 130, 256)     51,456   │
-│ batch_normalization       (None, 130, 256)      1,024   │
-│ max_pooling1d             (None,  65, 256)          0   │
-│ dropout                   (None,  65, 256)          0   │
-├─────────────────────────────────────────────────────────┤
-│ conv1d_1 (Conv1D)         (None,  65, 128)    163,968   │
-│ batch_normalization_1     (None,  65, 128)        512   │
-│ max_pooling1d_1           (None,  32, 128)          0   │
-│ dropout_1                 (None,  32, 128)          0   │
-├─────────────────────────────────────────────────────────┤
-│ bidirectional (BiLSTM)    (None,  32, 256)    263,168   │
-│ dropout_2                 (None,  32, 256)          0   │
-├─────────────────────────────────────────────────────────┤
-│ bidirectional_1 (BiLSTM)  (None,     128)     164,352   │
-│ dropout_3                 (None,     128)          0   │
-├─────────────────────────────────────────────────────────┤
-│ dense (Dense)             (None,      64)       8,256   │
-│ dropout_4                 (None,      64)          0   │
-│ dense_1 (Dense)           (None,       5)         325   │
-├─────────────────────────────────────────────────────────┤
-│ Total params: 653,061 (Trainable)                       │
-│ Non-trainable params: 0                                  │
-└─────────────────────────────────────────────────────────┘
-```
-
-## ภาคผนวก ข: ผล Training Log ตัวอย่าง
-
-```
-🚀 START TRAINING SUPER MODEL...
-Epoch 1/100
-Train Loss: 1.4821 | Train Acc: 0.3012 | Val Loss: 1.3945 | Val Acc: 0.3521
-...
-Epoch 15/100
-Train Loss: 0.8234 | Train Acc: 0.6821 | Val Loss: 0.9105 | Val Acc: 0.6234
-...
-Epoch 35/100
-Train Loss: 0.5123 | Train Acc: 0.8012 | Val Loss: 0.8932 | Val Acc: 0.7145
-...
-Epoch 47/100 — EarlyStopping triggered
-Train Loss: 0.4821 | Train Acc: 0.8523 | Val Loss: 0.9456 | Val Acc: 0.7198
-Best Weights Restored from Epoch 37
-
-📊 ผลการสอบ (Test Set) - Accuracy: 68.21%
-
-              precision  recall  f1-score  support
-       angry     0.72     0.72    0.72       320
-       happy     0.65     0.65    0.65       315
-         sad     0.74     0.74    0.74       298
-     neutral     0.71     0.71    0.71       310
-    surprise     0.63     0.63    0.63       305
-
-    accuracy                      0.68      1548
-   macro avg     0.69     0.69    0.69      1548
-weighted avg     0.69     0.68    0.68      1548
-```
-
-## ภาคผนวก ค: วิธีแก้ปัญหา Scaler Mismatch (Repair_Scaler.py)
-
-ปัญหาที่พบระหว่างการพัฒนาคือ Scaler ที่บันทึกไว้ตอน Train ไม่ตรงกับ Scaler ที่ใช้ตอน Evaluate เนื่องจากลำดับการสุ่มไฟล์ต่างกัน วิธีแก้คือการ Rebuild Scaler จาก Training Set ใหม่:
-
-```python
-# Repair_Scaler.py — แนวคิดหลัก
-# 1. รวบรวมไฟล์ทั้งหมดและเรียงลำดับ (สำคัญมาก)
-all_files.sort()  # ต้องเรียงแบบเดิมให้ตรงกับตอน Train
-
-# 2. แบ่ง Train/Test แบบเดิม (Random State เดียวกัน)
-train_files, test_files = train_test_split(
-    all_files, test_size=0.2, random_state=42  # random_state ต้องเหมือนกัน!
-)
-
-# 3. อ่านข้อมูล Train เพื่อ Fit Scaler ใหม่
-X_train, _ = load_features(train_files)
-scaler = StandardScaler()
-scaler.fit(X_train.reshape(N, -1))
-
-# 4. ใช้ Scaler ใหม่นี้ในการ Evaluate Test Set
-```
+13. Davis, S. B., & Mermelstein, P. (1980). *Comparison of parametric representations for monosyllabic word recognition in continuously spoken sentences.* IEEE Transactions on Acoustics, Speech, and Signal Processing, 28(4), 357–366.
 
 ---
 
@@ -1135,7 +1196,7 @@ scaler.fit(X_train.reshape(N, -1))
 | โครงงาน | ระบบรู้จำอารมณ์จากเสียงพูดแบบรวมหลายภาษา ด้วยเทคนิคการเรียนรู้เชิงลึก |
 | Hardware ที่ใช้ | NVIDIA GeForce RTX 3060 (12GB VRAM) |
 | ภาษาโปรแกรม | Python 3.x |
-| Framework หลัก | TensorFlow 2.x / Keras, Librosa, scikit-learn |
+| Framework หลัก | PyTorch 2.6 / torchaudio, Librosa, scikit-learn, Gradio |
 
 ---
 

@@ -20,8 +20,11 @@ SeniorP1/extracted_features/
 # Trained models
 **/*.h5
 **/*.keras
+**/*.pt
+**/*.pth
 asian_emotion_cnn_model.h5
 Backup Model/
+SeniorP1/models/
 
 # Encoders / Scalers
 **/*.pkl

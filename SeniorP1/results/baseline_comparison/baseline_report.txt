@@ -1,0 +1,252 @@
+=================================================================
+  BASELINE COMPARISON REPORT
+  Classical ML vs Deep Learning (ResNet)
+=================================================================
+Language          SVM       RF       GB   ResNet
+-----------------------------------------------------------------
+Chinese         81.8%    66.7%    68.6%    83.8% ← best
+Japanese        75.3%    66.7%    65.0%    88.5% ← best
+Korean          72.6%    61.9%    54.8%    66.2%
+Thai            63.9%    58.0%    58.6%    88.5% ← best
+English         50.8%    56.8%    55.8%    73.6% ← best
+-----------------------------------------------------------------
+
+Detailed Classification Reports:
+
+========================================
+  CHINESE
+========================================
+
+--- SVM (RBF) (Acc=81.78%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.81      0.85      0.83       117
+        Fear       0.78      0.89      0.83        93
+       Happy       0.86      0.67      0.76        92
+     Neutral       0.85      0.78      0.82        74
+         Sad       0.91      0.89      0.90        84
+    Surprise       0.72      0.81      0.76        78
+
+    accuracy                           0.82       538
+   macro avg       0.82      0.82      0.82       538
+weighted avg       0.82      0.82      0.82       538
+
+
+--- Random Forest (Acc=66.73%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.58      0.88      0.70       117
+        Fear       0.65      0.80      0.71        93
+       Happy       0.68      0.50      0.57        92
+     Neutral       0.85      0.54      0.66        74
+         Sad       0.74      0.76      0.75        84
+    Surprise       0.73      0.41      0.52        78
+
+    accuracy                           0.67       538
+   macro avg       0.70      0.65      0.65       538
+weighted avg       0.69      0.67      0.66       538
+
+
+--- Gradient Boost (Acc=68.59%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.66      0.79      0.72       117
+        Fear       0.67      0.81      0.73        93
+       Happy       0.64      0.59      0.61        92
+     Neutral       0.77      0.64      0.70        74
+         Sad       0.78      0.71      0.75        84
+    Surprise       0.64      0.53      0.58        78
+
+    accuracy                           0.69       538
+   macro avg       0.69      0.68      0.68       538
+weighted avg       0.69      0.69      0.68       538
+
+
+========================================
+  JAPANESE
+========================================
+
+--- SVM (RBF) (Acc=75.31%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.68      0.68      0.68        37
+     Disgust       0.67      0.72      0.69        39
+        Fear       0.75      0.82      0.79        40
+       Happy       0.79      0.79      0.79        42
+         Sad       0.78      0.72      0.75        39
+    Surprise       0.86      0.78      0.82        46
+
+    accuracy                           0.75       243
+   macro avg       0.75      0.75      0.75       243
+weighted avg       0.76      0.75      0.75       243
+
+
+--- Random Forest (Acc=66.67%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.59      0.59      0.59        37
+     Disgust       0.58      0.46      0.51        39
+        Fear       0.65      0.70      0.67        40
+       Happy       0.71      0.69      0.70        42
+         Sad       0.71      0.64      0.68        39
+    Surprise       0.71      0.87      0.78        46
+
+    accuracy                           0.67       243
+   macro avg       0.66      0.66      0.66       243
+weighted avg       0.66      0.67      0.66       243
+
+
+--- Gradient Boost (Acc=65.02%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.67      0.59      0.63        37
+     Disgust       0.59      0.67      0.63        39
+        Fear       0.54      0.47      0.51        40
+       Happy       0.65      0.71      0.68        42
+         Sad       0.71      0.62      0.66        39
+    Surprise       0.73      0.80      0.76        46
+
+    accuracy                           0.65       243
+   macro avg       0.65      0.65      0.64       243
+weighted avg       0.65      0.65      0.65       243
+
+
+========================================
+  KOREAN
+========================================
+
+--- SVM (RBF) (Acc=72.62%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.68      0.68      0.68        19
+       Happy       0.77      0.91      0.83        22
+     Neutral       0.67      0.56      0.61        18
+         Sad       0.75      0.78      0.77        23
+    Surprise       0.00      0.00      0.00         2
+
+    accuracy                           0.73        84
+   macro avg       0.57      0.59      0.58        84
+weighted avg       0.70      0.73      0.71        84
+
+
+--- Random Forest (Acc=61.90%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.78      0.37      0.50        19
+       Happy       0.58      0.86      0.69        22
+     Neutral       0.64      0.39      0.48        18
+         Sad       0.61      0.83      0.70        23
+    Surprise       0.00      0.00      0.00         2
+
+    accuracy                           0.62        84
+   macro avg       0.52      0.49      0.48        84
+weighted avg       0.63      0.62      0.59        84
+
+
+--- Gradient Boost (Acc=54.76%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.62      0.42      0.50        19
+       Happy       0.52      0.64      0.57        22
+     Neutral       0.46      0.33      0.39        18
+         Sad       0.63      0.74      0.68        23
+    Surprise       0.25      0.50      0.33         2
+
+    accuracy                           0.55        84
+   macro avg       0.50      0.53      0.49        84
+weighted avg       0.55      0.55      0.54        84
+
+
+========================================
+  THAI
+========================================
+
+--- SVM (RBF) (Acc=63.93%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.59      0.67      0.63       225
+       Happy       0.57      0.56      0.56       225
+     Neutral       0.68      0.66      0.67       226
+         Sad       0.73      0.67      0.70       225
+
+    accuracy                           0.64       901
+   macro avg       0.64      0.64      0.64       901
+weighted avg       0.64      0.64      0.64       901
+
+
+--- Random Forest (Acc=58.05%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.55      0.68      0.61       225
+       Happy       0.59      0.45      0.51       225
+     Neutral       0.58      0.65      0.61       226
+         Sad       0.61      0.54      0.57       225
+
+    accuracy                           0.58       901
+   macro avg       0.58      0.58      0.58       901
+weighted avg       0.58      0.58      0.58       901
+
+
+--- Gradient Boost (Acc=58.60%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.58      0.64      0.61       225
+       Happy       0.56      0.51      0.53       225
+     Neutral       0.60      0.62      0.61       226
+         Sad       0.60      0.57      0.59       225
+
+    accuracy                           0.59       901
+   macro avg       0.59      0.59      0.59       901
+weighted avg       0.59      0.59      0.59       901
+
+
+========================================
+  ENGLISH
+========================================
+
+--- SVM (RBF) (Acc=50.83%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.53      0.66      0.59       128
+     Disgust       0.66      0.41      0.51       129
+        Fear       0.51      0.22      0.30       129
+       Happy       0.42      0.43      0.43       129
+     Neutral       0.45      0.57      0.50       129
+         Sad       0.53      0.57      0.54       129
+    Surprise       0.54      0.90      0.67        67
+
+    accuracy                           0.51       840
+   macro avg       0.52      0.54      0.51       840
+weighted avg       0.52      0.51      0.49       840
+
+
+--- Random Forest (Acc=56.79%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.60      0.73      0.66       128
+     Disgust       0.69      0.44      0.54       129
+        Fear       0.56      0.32      0.41       129
+       Happy       0.45      0.53      0.48       129
+     Neutral       0.52      0.59      0.55       129
+         Sad       0.54      0.64      0.58       129
+    Surprise       0.76      0.90      0.82        67
+
+    accuracy                           0.57       840
+   macro avg       0.59      0.59      0.58       840
+weighted avg       0.58      0.57      0.56       840
+
+
+--- Gradient Boost (Acc=55.83%) ---
+              precision    recall  f1-score   support
+
+       Angry       0.59      0.70      0.64       128
+     Disgust       0.60      0.46      0.52       129
+        Fear       0.46      0.37      0.41       129
+       Happy       0.45      0.50      0.47       129
+     Neutral       0.54      0.60      0.57       129
+         Sad       0.58      0.58      0.58       129
+    Surprise       0.80      0.85      0.83        67
+
+    accuracy                           0.56       840
+   macro avg       0.57      0.58      0.57       840
+weighted avg       0.56      0.56      0.55       840
